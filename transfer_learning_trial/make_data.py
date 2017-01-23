@@ -51,28 +51,46 @@ def to_jpeg(source, dest):
     jpeg_image.save('%s.jpeg' % dest)
 
 
-def get_dest(source):
+def get_dest(patient):
     # Validation
-    assert(isinstance(source, str))
+    assert(isinstance(patient, str))
 
-    destination_string = 'transfer_trial/images'
+    destination_directory = 'transfer_trial/images'
 
-    positive = assign_class(source)
+    positive = assign_class(source, labels_dict=LABELS_DICT)
     if positive:
-        destination_string += '/positive'
+        classification = 'positive'
     else:
-        destination_string += '/negative'
+        classification = 'negative'
 
-    # TODO Increment filename as necessary
-    filename = source
+    existing_files = os.listdir(destination_directory)
+    i = 0
+    destination_string = '%s/%s/%s_%d' % (destination_directory, classification, patient, i)
+    while destination_string in existing_files:
+        i += 1
+        destination_string = '%s/%s/%s_%d' % (destination_directory, classification, patient, i)
 
-    destination_string += '/%s' % filename
     return destination_string
 
 
-def assign_class(source):
-    # TODO is this a positive or negative case?
-    return True
+def assign_class(patient, labels_dict=None):
+    if labels_dict is None:
+        raise NotImplementedError('Non-labels_dict not implemented')
+    return labels_dict[patient]
+
+
+def make_labels_dict():
+    labels_dict = {}
+    labels_file = open('stage1_labels.csv', 'r')
+    for line in labels_file[1:]:
+        patient = line.split(',')[0]
+        if line.split(',')[1].replace('\n', '') == '1':
+            labels_dict[patient] = True
+        elif line.split(',')[1].replace('\n', '') == '0':
+            labels_dict[patient] = False
+        else:
+            raise ValueError('Patient value unknown!\nid: %s' % patient)
+    return labels_dict
 
 
 if __name__ == '__main__':
@@ -81,6 +99,8 @@ if __name__ == '__main__':
         data_directory = 'sample_images'
     else:
         data_directory = 'stage1'
+
+    LABELS_DICT = make_labels_dict()
 
     if PROGRESS:
         total = len(os.listdir(data_directory))
@@ -95,7 +115,7 @@ if __name__ == '__main__':
                 current += 1
             # noinspection PyBroadException
             try:
-                to_jpeg(dicom_filename, get_dest(dicom_filename))
+                to_jpeg(dicom_filename, get_dest(patient_directory))
             except KeyboardInterrupt:
                 break
             except Exception:
