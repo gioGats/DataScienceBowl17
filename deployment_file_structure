@@ -1,0 +1,14 @@
+/nvme
+    /DataScienceBowl
+        /transfer_learning_trial
+
+    /stage1_data
+        /sample_images
+            -sample images
+        /stage1
+            -all images
+        /stage1_labels.csv
+        /transfer_trial
+            /images
+                /positive
+                /negative
