@@ -1,6 +1,5 @@
 from PIL import Image
-import pydicom
-# ISSUE package not loading properly, but is installed. Wtf?
+import dicom
 import os
 import sys
 import traceback
@@ -74,6 +73,9 @@ def get_dest(patient):
 
 
 def assign_class(patient, labels_dict=None):
+    # Validation
+    assert(isinstance(patient, str))
+
     if labels_dict is None:
         raise NotImplementedError('Non-labels_dict not implemented')
     return labels_dict[patient]
