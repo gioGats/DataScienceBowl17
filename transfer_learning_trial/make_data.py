@@ -40,8 +40,10 @@ def to_jpeg(source, dest):
     # ISSUE Filename incrementing works FINE when just opening and closing an empty file, but fails when saving a jpg
     mu = mudicom.load(source)
     img = mu.image
-    if not img.save_as_plt('%s.jpg' % dest):
-        raise SaveError('Could not save image (%s) at (%s)' % (source, dest))
+    if img.save_as_plt('%s.jpg' % dest):
+        print('Save %s at %s' % (source, dest))
+    else:
+        print('Save %s at %s -- FAILED' % (source, dest))
 
 
 def get_dest(patient):
@@ -114,11 +116,15 @@ if __name__ == '__main__':
                 # Python3
                 # print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
                 # Python2
-                print('\rImage conversion: %.2f' % (100 * (current/total))),  # ISSUE Just prints zeros
+                # print('\rImage conversion: %.2f' % (100 * (current/total))),  # ISSUE Just prints zeros
+                pass
             # noinspection PyBroadException
             try:
                 source_filename = '%s/%s/%s' % (data_directory, patient_directory, dicom_filename)
                 to_jpeg(source_filename, get_dest(patient_directory))
+            except KeyError:
+                # FUTURE handle missing key for patient '0b20184e0cd497028bdd155d9fb42dc9'
+                continue
             except KeyboardInterrupt:
                 break
             except Exception:
