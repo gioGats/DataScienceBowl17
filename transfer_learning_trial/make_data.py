@@ -40,7 +40,7 @@ def to_jpeg(source, dest):
     # ISSUE Filename incrementing works FINE when just opening and closing an empty file, but fails when saving a jpg
     mu = mudicom.load(source)
     img = mu.image
-    if img.save_as_plt('%s.jpg' % dest):
+    if img.save_as_plt(dest):
         print('Save %s at %s' % (source, dest))
     else:
         print('Save %s at %s -- FAILED' % (source, dest))
@@ -59,13 +59,13 @@ def get_dest(patient):
         classification = 'negative'
 
     i = 0
-    destination_string = '%s/%s/%s_%d' % (destination_directory, classification, patient, i)
+    destination_string = '%s/%s/%s_%d.jpg' % (destination_directory, classification, patient, i)
     while True:
         if not os.path.exists(destination_string):
             return destination_string
         else:
             i += 1
-            destination_string = '%s/%s/%s_%d' % (destination_directory, classification, patient, i)
+            destination_string = '%s/%s/%s_%d.jpg' % (destination_directory, classification, patient, i)
 
 
 def assign_class(patient, labels_dict=None):
