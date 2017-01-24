@@ -33,8 +33,6 @@ def to_jpeg(source, dest):
     assert(isinstance(source, str))
     assert(isinstance(dest, str))
     # ISSUE pydicom not converting properly
-    print dest
-    return
     """
     dicom_image = dicom.read_file(source)
     pixel_array = dicom_image.pixel_array
@@ -79,7 +77,6 @@ def get_dest(patient):
         if not os.path.exists(destination_string):
             return destination_string
         else:
-            print('Incrementing')
             i += 1
             destination_string = '%s/%s/%s_%d' % (destination_directory, classification, patient, i)
 
