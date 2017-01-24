@@ -10,6 +10,10 @@ PROGRESS = True
 test_outfile = open('test.out', 'w')
 
 
+class SaveError(Exception):
+    pass
+
+
 def message(msg, log=False, out_file=None):
     # Validation
     if log and out_file is None:
@@ -33,9 +37,11 @@ def to_jpeg(source, dest):
     assert(isinstance(source, str))
     assert(isinstance(dest, str))
 
+    # ISSUE Filename incrementing works FINE when just opening and closing an empty file, but fails when saving a jpg
     mu = mudicom.load(source)
     img = mu.image
-    img.save_as_plt('%s.jpg' % dest)
+    if not img.save_as_plt('%s.jpg' % dest):
+        raise SaveError('Could not save image (%s) at (%s)' % (source, dest))
 
 
 def get_dest(patient):
