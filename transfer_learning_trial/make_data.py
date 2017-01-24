@@ -37,11 +37,10 @@ def to_jpeg(source, dest):
     assert(isinstance(source, str))
     assert(isinstance(dest, str))
 
-    # ISSUE Filename incrementing works FINE when just opening and closing an empty file, but fails when saving a jpg
     mu = mudicom.load(source)
     img = mu.image
     if img.save_as_plt(dest):
-        print('Save %s at %s' % (source, dest))
+        return
     else:
         print('Save %s at %s -- FAILED' % (source, dest))
 
@@ -110,14 +109,6 @@ if __name__ == '__main__':
 
     for patient_directory in os.listdir(data_directory):
         for dicom_filename in os.listdir('%s/%s' % (data_directory, patient_directory)):
-
-            if PROGRESS:
-                # noinspection PyUnboundLocalVariable
-                # Python3
-                # print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
-                # Python2
-                # print('\rImage conversion: %.2f' % (100 * (current/total))),  # ISSUE Just prints zeros
-                pass
             # noinspection PyBroadException
             try:
                 source_filename = '%s/%s/%s' % (data_directory, patient_directory, dicom_filename)
@@ -130,5 +121,10 @@ if __name__ == '__main__':
             except Exception:
                 handle_exception(sys.exc_info(), stdout=True, out_file=test_outfile)
         if PROGRESS:
+            # noinspection PyUnboundLocalVariable
+            # Python3
+            # print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
+            # Python2
+            print('\rImage conversion: %d of %d' % (current, total)),  # ISSUE Just prints zeros
             current += 1
     test_outfile.close()
