@@ -108,6 +108,13 @@ if __name__ == '__main__':
         current = 0
 
     for patient_directory in os.listdir(data_directory):
+        if PROGRESS:
+            # noinspection PyUnboundLocalVariable
+            # Python3
+            # print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
+            # Python2
+            print('Image conversion: %d of %d' % (current, total))  # ISSUE Just prints zeros
+            current += 1
         for dicom_filename in os.listdir('%s/%s' % (data_directory, patient_directory)):
             # noinspection PyBroadException
             try:
@@ -120,11 +127,4 @@ if __name__ == '__main__':
                 break
             except Exception:
                 handle_exception(sys.exc_info(), stdout=True, out_file=test_outfile)
-        if PROGRESS:
-            # noinspection PyUnboundLocalVariable
-            # Python3
-            # print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
-            # Python2
-            print('\rImage conversion: %d of %d' % (current, total)),  # ISSUE Just prints zeros
-            current += 1
     test_outfile.close()
