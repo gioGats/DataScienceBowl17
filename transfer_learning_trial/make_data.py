@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# ISSUE mudicom dependency gdcm dependency swig not Python3
+# FUTURE mudicom dependency gdcm dependency swig not Python3
 import mudicom
 import os
 import sys
@@ -32,31 +32,10 @@ def to_jpeg(source, dest):
     # Validation
     assert(isinstance(source, str))
     assert(isinstance(dest, str))
-    # ISSUE pydicom not converting properly
-    """
-    dicom_image = dicom.read_file(source)
-    pixel_array = dicom_image.pixel_array
-    # FUTURE Consider selecting mode
-    jpeg_image = Image.fromarray(pixel_array, mode=None)
-    """
 
-    # FUTURE Consider using:
-    """
-    pixel_bytes = dicom_image.PixelData
-    jpeg_image = Image.frombytes(mode=, size=, data=pixel_bytes)
-    see:
-    https://pydicom.readthedocs.io/en/latest/working_with_pixel_data.html
-    http://pillow.readthedocs.io/en/4.0.x/reference/Image.html#PIL.Image.new
-    http://pillow.readthedocs.io/en/4.0.x/handbook/concepts.html#concept-modes
-    """
-    # FUTURE Consider standardizing size, color, etc
-    # ISSUE pydicom not converting properly
-    # jpeg_image.save('%s.jpg' % dest)
-
-    # ISSUE importing mudicom: ModuleNotFoundError: No module named 'gdcm'
     mu = mudicom.load(source)
     img = mu.image
-    img.save_as_pil('%s.jpg' % dest)
+    img.save_as_plt('%s.jpg' % dest)
 
 
 def get_dest(patient):
@@ -129,7 +108,7 @@ if __name__ == '__main__':
                 # Python3
                 # print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
                 # Python2
-                print('\rImage conversion: %.2f' % (100 * (current/total))),
+                print('\rImage conversion: %.2f' % (100 * (current/total))),  # ISSUE Just prints zeros
             # noinspection PyBroadException
             try:
                 source_filename = '%s/%s/%s' % (data_directory, patient_directory, dicom_filename)
