@@ -5,7 +5,7 @@ import os
 import sys
 import traceback
 
-DEBUG = True
+DEBUG = False
 PROGRESS = True
 test_outfile = open('test.out', 'w')
 
@@ -126,5 +126,5 @@ if __name__ == '__main__':
             except KeyboardInterrupt:
                 break
             except Exception:
-                handle_exception(sys.exc_info(), stdout=True, out_file=test_outfile)
+                handle_exception(sys.exc_info(), stdout=False, out_file=test_outfile)
     test_outfile.close()
