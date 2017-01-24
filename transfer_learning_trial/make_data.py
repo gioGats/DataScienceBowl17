@@ -1,5 +1,6 @@
-from PIL import Image
-import dicom
+#!/usr/bin/env python
+# ISSUE mudicom dependency gdcm dependency swig not Python3
+import mudicom
 import os
 import sys
 import traceback
@@ -31,11 +32,13 @@ def to_jpeg(source, dest):
     # Validation
     assert(isinstance(source, str))
     assert(isinstance(dest, str))
-
-    dicom_image = pydicom.read_file(source)
+    # ISSUE pydicom not converting properly
+    """
+    dicom_image = dicom.read_file(source)
     pixel_array = dicom_image.pixel_array
     # FUTURE Consider selecting mode
     jpeg_image = Image.fromarray(pixel_array, mode=None)
+    """
 
     # FUTURE Consider using:
     """
@@ -47,7 +50,13 @@ def to_jpeg(source, dest):
     http://pillow.readthedocs.io/en/4.0.x/handbook/concepts.html#concept-modes
     """
     # FUTURE Consider standardizing size, color, etc
-    jpeg_image.save('%s.jpeg' % dest)
+    # ISSUE pydicom not converting properly
+    # jpeg_image.save('%s.jpg' % dest)
+
+    # ISSUE importing mudicom: ModuleNotFoundError: No module named 'gdcm'
+    mu = mudicom.load(source)
+    img = mu.image
+    img.save_as_pil('%s.jpg' % dest)
 
 
 def get_dest(patient):
@@ -56,7 +65,7 @@ def get_dest(patient):
 
     destination_directory = 'transfer_trial/images'
 
-    positive = assign_class(source, labels_dict=LABELS_DICT)
+    positive = assign_class(patient, labels_dict=LABELS_DICT)
     if positive:
         classification = 'positive'
     else:
@@ -84,11 +93,15 @@ def assign_class(patient, labels_dict=None):
 def make_labels_dict():
     labels_dict = {}
     labels_file = open('stage1_labels.csv', 'r')
-    for line in labels_file[1:]:
-        patient = line.split(',')[0]
-        if line.split(',')[1].replace('\n', '') == '1':
+    for line in labels_file:
+        if line[:2] == 'id':
+            continue
+        line_list = line.replace('\n', '').split(',')
+        patient = line_list[0]
+        value = line_list[1]
+        if value == '1':
             labels_dict[patient] = True
-        elif line.split(',')[1].replace('\n', '') == '0':
+        elif value == '0':
             labels_dict[patient] = False
         else:
             raise ValueError('Patient value unknown!\nid: %s' % patient)
@@ -114,12 +127,14 @@ if __name__ == '__main__':
             if PROGRESS:
                 # noinspection PyUnboundLocalVariable
                 print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
-                current += 1
             # noinspection PyBroadException
             try:
-                to_jpeg(dicom_filename, get_dest(patient_directory))
+                source_filename = '%s/%s/%s' % (data_directory, patient_directory, dicom_filename)
+                to_jpeg(source_filename, get_dest(patient_directory))
             except KeyboardInterrupt:
                 break
             except Exception:
                 handle_exception(sys.exc_info(), stdout=True, out_file=test_outfile)
+        if PROGRESS:
+            current += 1
     test_outfile.close()
