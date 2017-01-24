@@ -71,10 +71,9 @@ def get_dest(patient):
     else:
         classification = 'negative'
 
-    existing_files = os.listdir(destination_directory)
     i = 0
     destination_string = '%s/%s/%s_%d' % (destination_directory, classification, patient, i)
-    while destination_string in existing_files:
+    while os.path.exists(destination_string):
         i += 1
         destination_string = '%s/%s/%s_%d' % (destination_directory, classification, patient, i)
 
@@ -126,7 +125,10 @@ if __name__ == '__main__':
 
             if PROGRESS:
                 # noinspection PyUnboundLocalVariable
-                print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
+                # Python3
+                # print('\rImage conversion: %.2f' % (100 * (current/total)), end='')
+                # Python2
+                print('\rImage conversion: %.2f' % (100 * (current/total))),
             # noinspection PyBroadException
             try:
                 source_filename = '%s/%s/%s' % (data_directory, patient_directory, dicom_filename)
