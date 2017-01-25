@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+
+# Calls TensorFlow demo script for transfer learning on Inception-v3
+# Requires large download and pre-processing on first run.
+# TRAIN runs only 50000 training steps at 0.001 learning rate
+#
+# See:
+# https://research.googleblog.com/2016/03/train-your-own-image-classifier-with.html
+# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/image_retraining/retrain.py
+
 cd ~/tensorflow
 
 python3 tensorflow/examples/image_retraining/retrain.py \
