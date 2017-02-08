@@ -6,7 +6,7 @@ class CLI(object):
         pass
 
 
-class ClassifierInterface(object):
+class ClassifierInterfaces(object):
     def __init__(self):
         pass
 
@@ -30,3 +30,9 @@ class ClassifierInterface(object):
         for patient_id in patient_dict.keys():
             output_file.write('%s,%.2f\n' % (patient_id, self.classify(patient_dict[patient_id])))
         output_file.close()
+
+if __name__ == '__main__':
+    pass
+    # TODO Turn /nvme/deployment/patient_scans into a patient_dict
+    # ci = ClassifierInterfaces()
+    # ci.make_submission(patient_dict, output='patient_results.txt')

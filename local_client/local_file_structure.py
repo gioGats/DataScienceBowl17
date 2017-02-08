@@ -1,0 +1,1 @@
+# TODO Verify that the right directory structure is in place for examine_scans.sh

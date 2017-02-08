@@ -1,6 +1,12 @@
 /nvme
     /DataScienceBowl
         /transfer_learning_trial
+        /client
+            /upload_scans.sh
+            /examine_scan.sh
+            /download_results.sh
+            /local_dependencies.py
+        /CLI.py
 
     /stage1_data
         /sample_images
@@ -12,3 +18,9 @@
             /images
                 /positive
                 /negative
+    /stage2_data
+    /deployment
+        /patient_scans
+            /id
+                -all dicoms for that id
+        /patient_results.txt
