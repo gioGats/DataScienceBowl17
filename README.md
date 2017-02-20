@@ -1,6 +1,8 @@
 # DataScienceBowl17
 Entries to the 2017 [Data Science Bowl](https://www.kaggle.com/c/data-science-bowl-2017/) competition for automated lung cancer detection, as part of CS 4620: Intelligent Systems
 
+[Team Documents](https://drive.google.com/drive/folders/0B_qO3FJuQ8gyZTQ5R0pDbFN6U1E?usp=sharing)
+
 #### Installation
 Python 3.5+ is recommended.  Expect Python 3.6+.
 
