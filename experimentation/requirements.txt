@@ -3,3 +3,4 @@ pydicom==0.9.9
 tensorflow==1.0.0
 tflearn==0.3
 pandas==0.12.2
+scikit-learn==0.18.1
