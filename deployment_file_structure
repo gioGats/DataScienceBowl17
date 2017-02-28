@@ -5,7 +5,7 @@
                 /cnn
                 /probability
                 /rnn
-                /preprocess.py
+                /preprocess
         /production_1 - TBD
         /production_2 - TBD
         /CLI.py
