@@ -6,9 +6,10 @@ Entries to the 2017 [Data Science Bowl](https://www.kaggle.com/c/data-science-bo
 #### Installation
 Python 3.5+ is recommended.  Expect Python 3.6+.
 
-'pip3 install -r requirements.txt' will install latest versions of required packages, minus tensorflow.
+Training and experimentation is done in the /experimentation directory.  Two production models will have their own directories for competition predictions.  Experimentation and production requirements may vary; see individual directories for requirements.
 
-Follow [the TensorFlow installation guide](https://www.tensorflow.org/get_started/os_setup) to install tensorflow.
+From a command line in each directory, 'sudo pip3 install -r requirements.txt' will install latest versions of required packages.
+This will attempt to install TensorFlow v1.0.  This installation will likely fail if previous versions of tensorflow are installed.
+Installing tensorflow-gpu is strongly recommended for experimentation and encouraged for production.
 
-To run the transfer_learning_trial on UNIX, download and store data as outlined in deployment_file_structure.
-Then clone the tensorflow repository to the home directory.
+Follow [the TensorFlow installation guide](https://www.tensorflow.org/install/) for assistance.
