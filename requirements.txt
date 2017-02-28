@@ -1,5 +1,0 @@
-numpy
-pydicom
-pillow
-tensorflow
-tflearn

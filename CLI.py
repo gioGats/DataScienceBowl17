@@ -10,29 +10,29 @@ class ClassifierInterfaces(object):
     def __init__(self):
         pass
 
-    def classify(self, dicom_list):
+    def classify(self, patient_dir):
         """
-        Given a list of dicom images from a patient,
+        Given a directory named for patient id and continaing a series of dicom slices,
         return probability that patient is diagnosed with lung cancer in the next 12 months.
-        :param dicom_list: list of dicom images
+        :param patient_dir: path to patient directory
         :return: float in range [0,1]
         """
         raise NotImplementedError
 
-    def make_submission(self, patient_dict, output='stage1_submission.csv'):
+    def make_submission(self, patient_list, output='stage1_submission.csv'):
         """
-        Given a dictionary of patient_id: list of dicoms, generate a submission file
-        :param patient_dict: dict
+        Given a list of patient_ids, generate a submission file
+        :param patient_list: list of str
         :param output: str filename to save to, default
         """
         output_file = open(output, 'w')
         output_file.write('id,cancer\n')
-        for patient_id in patient_dict.keys():
-            output_file.write('%s,%.2f\n' % (patient_id, self.classify(patient_dict[patient_id])))
+        for patient_id in patient_list:
+            output_file.write('%s,%.2f\n' % (patient_id, self.classify(patient_id)))
         output_file.close()
 
 if __name__ == '__main__':
     pass
-    # TODO Turn /nvme/deployment/patient_scans into a patient_dict
+    # patient_list = [id1, id2, ..., idn]
     # ci = ClassifierInterfaces()
-    # ci.make_submission(patient_dict, output='patient_results.txt')
+    # ci.make_submission(patient_list, output='patient_results.txt')

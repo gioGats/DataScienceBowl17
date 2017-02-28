@@ -1,0 +1,5 @@
+numpy==1.12.0
+pydicom==0.9.9
+tensorflow==1.0.0
+tflearn==0.3
+pandas==0.12.2
