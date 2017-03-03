@@ -7,13 +7,18 @@ from .net_in_net import network_in_network_2d, network_in_network_3d
 
 import tflearn
 import numpy
+import pickle
 
 if __name__ == '__main__':
     default_input_2dtensor = [None, 512, 512, 3]  # TODO Arbitrary
     default_input_3dtensor = [None, 512, 512, 25, 3]  # TODO Arbitrary
     default_output_tensor = [None, 1]
-    trial_2d = numpy.array([[]])  # TODO Complete trial images
-    trial_3d = numpy.array([[[]]])
+
+    with open('/raw/trial_2d.np', 'rb') as f:  # TODO Pickle an example
+        trial_2d = pickle.load(f)
+        assert(isinstance(trial_2d, numpy.array))
+        f.close()
+
     for model_2d in [alexnet_model_2d(default_input_2dtensor, default_output_tensor),
                      highway_model_2d(default_input_2dtensor, default_output_tensor),
                      inception_resnet_v2_2d(default_input_2dtensor, default_output_tensor),
@@ -26,6 +31,11 @@ if __name__ == '__main__':
             # TODO Validate prediction is as specified in default_output_tensor
         except NotImplementedError:
             print("%s not implemented" % str(model_2d))
+
+    with open('/raw/trial_3d.np', 'rb') as f:  # TODO Pickle an example
+        trial_3d = pickle.load(f)
+        assert(isinstance(trial_3d, numpy.array))
+        f.close()
 
     for model_3d in [alexnet_model_3d(default_input_3dtensor, default_output_tensor),
                      highway_model_3d(default_input_3dtensor, default_output_tensor),
