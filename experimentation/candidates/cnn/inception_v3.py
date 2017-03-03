@@ -1,7 +1,7 @@
 import tflearn
 
 
-def inception_model_2d(input_tensor=[None, 227, 227, 3], output_tensor=[None, 1]):
+def inception_v3_2d(input_tensor=[None, 227, 227, 3], output_tensor=[None, 1]):
     """
     Generates an inception model that conforms to specified input/output tensors.
     :param input_tensor: Dimensions of input
@@ -126,7 +126,7 @@ def inception_model_2d(input_tensor=[None, 227, 227, 3], output_tensor=[None, 1]
                         max_checkpoints=1, tensorboard_verbose=2)
 
 
-def inception_model_3d(input_tensor=[None, 227, 227, 3], output_tensor=[None, 1]):
+def inception_v3_3d(input_tensor=[None, 227, 227, 3], output_tensor=[None, 1]):
     """
     Generates an inception model that conforms to specified input/output tensors.
     :param input_tensor: Dimensions of input
