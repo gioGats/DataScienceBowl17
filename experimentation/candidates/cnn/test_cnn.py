@@ -10,8 +10,8 @@ import numpy
 import pickle
 
 if __name__ == '__main__':
-    default_input_2dtensor = [None, 512, 512, 3]  # TODO Arbitrary
-    default_input_3dtensor = [None, 512, 512, 25, 3]  # TODO Arbitrary
+    default_input_2dtensor = [None, 100, 100, 3]  # TODO Arbitrary
+    default_input_3dtensor = [None, 100, 100, 25, 3]  # TODO Arbitrary
     default_output_tensor = [None, 1]
 
     with open('/raw/trial_2d.np', 'rb') as f:  # TODO Pickle an example
