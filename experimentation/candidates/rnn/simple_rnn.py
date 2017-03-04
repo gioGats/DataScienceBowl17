@@ -1,14 +1,35 @@
 import tflearn
 
 
-def simple_rnn(layers, dropout='', activation='', evaluation='', comp_vision=''):
-    """
+def simple_rnn(network, param_dict=None):
+    if param_dict is None:
+        param_dict = {
+            'n_units': 128,
+            'activation': 'sigmoid',
+            'dropout': None,
+            'bias': True,
+            'weights_init': None,
+            'return_seq': False,
+            'return_state': False,
+            'initial_state': None,
+            'dynamic': False,
+            'trainable': True,
+            'restore': True,
+            'reuse': False,
+            'scope': None
 
-    :param layers: list of ints that specify number of nodes in each layer (len of layers is num layers)
-    :param dropout: list of [0,1] floats that specifiy p_dropout applied to corresponding layer
-    :param activation: any of the supported tflearn methods
-    :param evaluation: any of the supported tflearn methods
-    :param comp_vision: any of the models available from 'import cnn'
-    :return: An instance of tflearn.DNN class supporting {fit, predict, evaluate, save, load} methods
-    """
-    pass
+        }
+    return tflearn.simple_rnn(network,
+                              n_units=param_dict['n_units'],
+                              activation=param_dict['activation'],
+                              dropout=param_dict['dropout'],
+                              bias=param_dict['bias'],
+                              weights_init=param_dict['weights_init'],
+                              return_seq=param_dict['return_seq'],
+                              return_state=param_dict['return_state'],
+                              initial_state=param_dict['initial_state'],
+                              dynamic=param_dict['dynamic'],
+                              trainable=param_dict['trainable'],
+                              restore=param_dict['restore'],
+                              reuse=param_dict['reuse'],
+                              scope=param_dict['scope'])

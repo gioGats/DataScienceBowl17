@@ -1,0 +1,15 @@
+Sprint 2
+Goals: Complete candidate models in 2d and 3d that allow for parameter variation in input/output tensor size and recurrent final layer (2d only).
+
+3d:
+-Copy code for all raw implementations
+-Convert to tflearn where necessary
+-Modify 2d convolution operations to 3d
+
+2d:
+-Copy code for all raw implementations
+-Convert to tflearn where necessary
+-Add rnn functionality layers
+
+Later:
+-Deal with the transfer learning monster in 2d... Then 3d
