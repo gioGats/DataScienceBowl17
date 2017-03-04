@@ -10,21 +10,21 @@ import numpy
 import pickle
 
 if __name__ == '__main__':
-    default_input_2dtensor = [None, 100, 100, 3]  # TODO Arbitrary
-    default_input_3dtensor = [None, 100, 100, 25, 3]  # TODO Arbitrary
-    default_output_tensor = [None, 1]
+    DEFAULT_input_2dtensor = [None, 100, 100, 3]  # TODO Arbitrary
+    DEFAULT_input_3dtensor = [None, 100, 100, 25, 3]  # TODO Arbitrary
+    DEFAULT_output_dimension = 1
 
     with open('/raw/trial_2d.np', 'rb') as f:  # TODO Pickle an example
         trial_2d = pickle.load(f)
         assert(isinstance(trial_2d, numpy.array))
         f.close()
 
-    for model_2d in [alexnet_model_2d(default_input_2dtensor, default_output_tensor),
-                     highway_model_2d(default_input_2dtensor, default_output_tensor),
-                     inception_resnet_v2_2d(default_input_2dtensor, default_output_tensor),
-                     inception_v3_2d(default_input_2dtensor, default_output_tensor),
-                     inception_v4_2d(default_input_2dtensor, default_output_tensor),
-                     network_in_network_2d(default_input_2dtensor, default_output_tensor)]:
+    for model_2d in [alexnet_model_2d(DEFAULT_input_2dtensor, DEFAULT_output_dimension),
+                     highway_model_2d(DEFAULT_input_2dtensor, DEFAULT_output_dimension),
+                     inception_resnet_v2_2d(DEFAULT_input_2dtensor, DEFAULT_output_dimension),
+                     inception_v3_2d(DEFAULT_input_2dtensor, DEFAULT_output_dimension),
+                     inception_v4_2d(DEFAULT_input_2dtensor, DEFAULT_output_dimension),
+                     network_in_network_2d(DEFAULT_input_2dtensor, DEFAULT_output_dimension)]:
         try:
             assert(isinstance(model_2d, tflearn.DNN))  # TODO Verify in tflearn docs
             prediction = model_2d.predict(trial_2d)
@@ -37,12 +37,12 @@ if __name__ == '__main__':
         assert(isinstance(trial_3d, numpy.array))
         f.close()
 
-    for model_3d in [alexnet_model_3d(default_input_3dtensor, default_output_tensor),
-                     highway_model_3d(default_input_3dtensor, default_output_tensor),
-                     inception_resnet_v2_3d(default_input_3dtensor, default_output_tensor),
-                     inception_v3_3d(default_input_3dtensor, default_output_tensor),
-                     inception_v4_3d(default_input_3dtensor, default_output_tensor),
-                     network_in_network_3d(default_input_3dtensor, default_output_tensor)]:
+    for model_3d in [alexnet_model_3d(DEFAULT_input_3dtensor, DEFAULT_output_dimension),
+                     highway_model_3d(DEFAULT_input_3dtensor, DEFAULT_output_dimension),
+                     inception_resnet_v2_3d(DEFAULT_input_3dtensor, DEFAULT_output_dimension),
+                     inception_v3_3d(DEFAULT_input_3dtensor, DEFAULT_output_dimension),
+                     inception_v4_3d(DEFAULT_input_3dtensor, DEFAULT_output_dimension),
+                     network_in_network_3d(DEFAULT_input_3dtensor, DEFAULT_output_dimension)]:
         try:
             assert(isinstance(model_3d, tflearn.DNN))  # TODO Verify in tflearn docs
             prediction = model_3d.predict(trial_3d)
