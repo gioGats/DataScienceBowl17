@@ -1,4 +1,5 @@
 # FUTURE Command-Line Interface for running sub-scripts
+import pickle
 
 
 class CLI(object):
@@ -7,8 +8,19 @@ class CLI(object):
 
 
 class ClassifierInterfaces(object):
-    def __init__(self):
-        pass
+    def __init__(self, model):
+        if model == '1':
+            with open('production_1/model.pkl', 'rb') as f:
+                self.model = pickle.load(f)
+                f.close()
+            from production_1.preprocess import two_d_preprocess as preprocess
+        elif model == '2':
+            with open('production_2/model.pkl', 'rb') as f:
+                self.model = pickle.load(f)
+                f.close()
+            from production_2.preprocess import three_d_preprocess as preprocess
+        else:
+            raise NotImplementedError
 
     def classify(self, patient_dir):
         """
@@ -17,7 +29,7 @@ class ClassifierInterfaces(object):
         :param patient_dir: path to patient directory
         :return: float in range [0,1]
         """
-        raise NotImplementedError
+        return self.model.predict(preprocess(patient_dir))
 
     def make_submission(self, patient_list, output='stage1_submission.csv'):
         """

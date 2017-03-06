@@ -4,7 +4,7 @@ import tflearn
 def inception_v3_2d(input_tensor, output_dimension=1, recurrent_layer='rnn', recurrent_params=None):
     """
     Generates an inception model that conforms to specified input/output tensors.
-    :param input_tensor: 5D Tensor of input dimensions [batch, x, y, color_channels]
+    :param input_tensor: 4D Tensor of input dimensions [batch, x, y, color_channels]
     :param output_dimension: Dimensions of output
     :param recurrent_layer: str of recurrent layer to use ['', 'rnn', 'lstm', 'gru']
     :param recurrent_params: dict of parameters for recurrent layer; see rnn directory for detail
