@@ -1,0 +1,30 @@
+OPENCV OPT TRIAL | patient 99 of 100 | slice 100 of 100
+cv2_opt_all
+Max: 11.37; Mean: 11.37; Std: 0.00; Min: 11.37
+
+cv2_opt_patients
+Max: 0.18; Mean: 0.11; Std: 0.02; Min: 0.10
+
+cv2_opt_slices
+Max: 0.00; Mean: 0.00; Std: 0.00; Min: 0.00
+
+OPENCV TRIAL | patient 99 of 100 | slice 100 of 100
+cv2_all
+Max: 32.80; Mean: 32.80; Std: 0.00; Min: 32.80
+
+cv2_patients
+Max: 0.38; Mean: 0.33; Std: 0.01; Min: 0.32
+
+cv2_slices
+Max: 0.01; Mean: 0.00; Std: 0.00; Min: 0.00
+
+
+SKIMAGE TRIAL | patient 99 of 100 | slice 100 of 100
+skimage_all
+Max: 770.76; Mean: 770.76; Std: 0.00; Min: 770.76
+
+skimage_patients
+Max: 8.22; Mean: 7.71; Std: 0.07; Min: 7.69
+
+skimage_slices
+Max: 0.09; Mean: 0.08; Std: 0.00; Min: 0.08
