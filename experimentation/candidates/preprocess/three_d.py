@@ -15,6 +15,11 @@ def three_d_preprocess(dicom_directory,
 
     # TODO Process metadata
 
+    # TODO Apply processing function
+    #     processed_array = processing_function(resized_array)
+    # TODO Replace slice_array with processed_array
+    # (In the same data structure? This will be a single threaded operation, so priority to speed)
+
     # TODO Apply 2D resizing
     # for slice_array in slices:
     #     if (slice_array.x_shape < x) or (slice_array.y_shape < y) or (slice_array.channel_shape < channels):
@@ -23,10 +28,7 @@ def three_d_preprocess(dicom_directory,
     #         resized_array = downsample_2d_function(slice_array)
     #     else:
     #         raise Error Case
-    # TODO Apply processing function
-    #     processed_array = processing_function(resized_array)
-    # TODO Replace slice_array with processed_array
-    # (In the same data structure? This will be a single threaded operation, so priority to speed)
+
 
     # TODO 2D quick exit
     # if slices <= 0:
