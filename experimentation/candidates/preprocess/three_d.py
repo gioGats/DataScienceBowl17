@@ -14,7 +14,18 @@ resizing natively.  We should strongly consider an openCV model to speed this up
 
 def three_d_preprocess(dicom_directory,
                        x=512, y=512, slices=100,
-                       mode=None, processing=''):
+                       mode=None, processing='', mirroring_axes=None):
+    """
+
+    :param dicom_directory:
+    :param x:
+    :param y:
+    :param slices:
+    :param mode:
+    :param processing:
+    :param mirroring_axes:
+    :return:
+    """
     # Validate input, passed directly to skimage.transform.resize()
     if (mode is not None) and \
             (mode not in ['constant', 'edge', 'symmetric', 'reflect', 'wrap']):
@@ -37,7 +48,17 @@ def three_d_preprocess(dicom_directory,
     # Apply 3D resizing
     else:
         patient_array = resize(patient_array, (x, y, slices), mode=mode)
-    return np.array([patient_array, label])
+
+    # Apply mirroring
+    return_arrays = [patient_array, label]
+    if mirroring_axes is not None:
+        if 'lr' in mirroring_axes:  # mirror x axis
+            return_arrays.append([np.flip(patient_array, 1), label])
+        if 'ud' in mirroring_axes:  # mirror y axis
+            return_arrays.append([np.flip(patient_array, 2), label])
+        if 'fb' in mirroring_axes and slices >= 0:  # mirror z axis
+            return_arrays.append([np.flip(patient_array, 0), label])
+    return np.array(return_arrays)
 
 
 def get_label(patient_id, data_dir='/nvme/stage1_data/'):
