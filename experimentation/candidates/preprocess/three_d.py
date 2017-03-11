@@ -24,14 +24,12 @@ def three_d_preprocess(dicom_directory,
     if processing == '' or 'hu':
         from data_manipulation_1 import get_pixels_hu as processing
 
-    # Bring all dicoms in dicom_directory into memory, and
-    # process raw data values into a 2D numpy array (z, (x, y, channel))
+    # Bring all dicoms in dicom_directory into memory
     # with pixel values adjusted with processing function (defined above)
     patient_array = processing(load_scan(dicom_directory))
 
-    # TODO Get patient label
-    # label = get_label(dicom_directory.split('/')[-1])
-    label = 1
+    patient_id = dicom_directory.split('/')[-1]
+    label = get_label(patient_id)
 
     # Apply 2D resizing
     if slices <= 0:
@@ -40,6 +38,13 @@ def three_d_preprocess(dicom_directory,
     else:
         patient_array = resize(patient_array, (x, y, slices), mode=mode)
     return np.array([patient_array, label])
+
+
+def get_label(patient_id, data_dir='/nvme/stage1_data/'):
+    labels_df = pd.read_csv(data_dir + 'stage1_labels.csv', index_col=0)
+    label = labels_df.get_value(patient_id, 'cancer')
+    return label
+
 
 if __name__ == '__main__':
     test_individual = '/nvme/stage1_data/sample_images/0a0c32c9e08cc2ea76a71649de56be6d'
