@@ -62,8 +62,8 @@ def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
 
 
 def array_merge(dataset_array, new_example_array):
-    # TODO Merge the arrays while preserving axes
-    return []
+    # TODO Verify correct axis preserved in merge
+    return np.concatenate((dataset_array, new_example_array))
 
 
 def name_dataset(x, y, slices, mode, processing, mirroring_axes):
