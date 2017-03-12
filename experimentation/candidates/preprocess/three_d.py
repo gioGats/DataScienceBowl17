@@ -15,15 +15,15 @@ def three_d_preprocess(dicom_directory,
                        x=512, y=512, slices=100,
                        mode=None, processing='', mirroring_axes=None):
     """
-
-    :param dicom_directory:
-    :param x:
-    :param y:
-    :param slices:
-    :param mode:
-    :param processing:
-    :param mirroring_axes:
-    :return:
+    Processes a directory of dicom files into a numpy array. (3D)
+    :param dicom_directory: path to directory with dicom files
+    :param x: x dimension of output
+    :param y: y dimension of output
+    :param slices: number of slices in output
+    :param mode: One of 'constant', 'edge', 'symmetric', 'reflect', 'wrap'
+    :param processing: 'hu'
+    :param mirroring_axes: 0 or more of ['lr', 'ud', 'fb']
+    :return: np.array of [[slices, x, y], label]
     """
     # Validate input, passed directly to skimage.transform.resize()
     if (mode is not None) and \
@@ -33,13 +33,18 @@ def three_d_preprocess(dicom_directory,
     # Bring all dicoms in dicom_directory into memory
     patient_array = load_scan(dicom_directory)
 
-    # FUTURE Use str param for processing to specify more processing functions
+    # TODO Use str param for processing to specify more processing functions
+    # Look to kaggle tutorials for inspiration
+
     if processing == '' or 'hu':
         # adjust pixel values  with processing function
         patient_array = get_pixels_hu(patient_array)
 
     patient_id = dicom_directory.split('/')[-1]
     label = get_label(patient_id)
+
+    # TODO Speed up the resizing/mirroring code (multi-thread or gpu)
+    # Look into opencv/other libraries
 
     # Apply 2D resizing
     if slices <= 0:
@@ -61,6 +66,8 @@ def three_d_preprocess(dicom_directory,
 
 
 def get_label(patient_id, data_dir='/nvme/stage1_data/'):
+    # TODO May want to abstract this to a higher level;
+    # passing a labels file as input, instead of loading the labels file for every patient.
     labels_df = pd.read_csv(data_dir + 'stage1_labels.csv', index_col=0)
     label = labels_df.get_value(patient_id, 'cancer')
     return label
@@ -69,9 +76,11 @@ def get_label(patient_id, data_dir='/nvme/stage1_data/'):
 def load_scan(path):
     slices = [dicom.read_file(path + '/' + s) for s in os.listdir(path)]
     slices.sort(key=lambda x: float(x.ImagePositionPatient[2]))
+    # noinspection PyBroadException
     try:
         slice_thickness = np.abs(slices[0].ImagePositionPatient[2] - slices[1].ImagePositionPatient[2])
-    except:
+    except Exception as e:
+        print(e)
         slice_thickness = np.abs(slices[0].SliceLocation - slices[1].SliceLocation)
 
     for s in slices:

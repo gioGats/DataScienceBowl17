@@ -8,6 +8,5 @@ if __name__ == '__main__':
     # TODO Define a range of test datasets to create
     for dataset_params in datasets_to_create:
         # TODO Fill in make_dataset() params from dataset_params
-        ds = make_dataset(stage1_data)
-        # TODO save ds as h5py
+        make_dataset(stage1_data)
         # TODO start ds upload to GDrive
