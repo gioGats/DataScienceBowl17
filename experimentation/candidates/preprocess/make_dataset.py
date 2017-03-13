@@ -13,7 +13,7 @@ problems in the larger datasets.
 
 
 def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
-                 processing='', mirroring_axes=None, chunk_size=10):
+                 processing='', mirroring_axes=None, chunk_size=10, dest=None):
     """
     Applys function parameters to make an h5py dataset of all patients in top_directory.
     :param top_directory: path to directory with patient directories
@@ -33,11 +33,11 @@ def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
 
     for patient_dir in os.listdir(top_directory):
         if slices < 0:
-            from two_d import two_d_preprocess
+            from .two_d import two_d_preprocess
             processed_patient = two_d_preprocess('%s/%s' % (top_directory, patient_dir), x=x, y=y, mode=mode,
                                                  processing=processing, mirroring_axes=mirroring_axes)
         else:
-            from three_d import three_d_preprocess
+            from .three_d import three_d_preprocess
             processed_patient = three_d_preprocess('%s/%s' % (top_directory, patient_dir), x=x, y=y, slices=slices,
                                                    mode=mode, processing=processing, mirroring_axes=mirroring_axes)
         i += 1
@@ -59,7 +59,10 @@ def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
     if chunk_size == -1:
         import pickle
         name = name_dataset(x=x, y=y, slices=slices, mode=mode, processing=processing, mirroring_axes=mirroring_axes)
-        name = name[:-2] + 'np'
+        if dest is None:
+            name = name[:-2] + 'np'
+        else:
+            name = dest + '/' + name[:-2] + 'np'
         with open(name, 'wb') as f:
             pickle.dump(chunk_array, f)
             f.close()
