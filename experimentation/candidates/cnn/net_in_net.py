@@ -31,7 +31,7 @@ def network_in_network_2d(input_tensor, output_dimension=1, recurrent_layer='rnn
 
     # Last layer
     network = conv_2d(network, output_dimension, 1, activation='relu')
-    # TODO Insert recurrence
+    # SPRINT3 Insert recurrence
     network = avg_pool_2d(network, 8)
     network = flatten(network)
     network = regression(network, optimizer='adam',

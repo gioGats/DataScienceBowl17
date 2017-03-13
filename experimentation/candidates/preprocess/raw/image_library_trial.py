@@ -30,11 +30,11 @@ if __name__ == '__main__':
             # Resize up
             up = cv2.resize(slice, (1000, 1000))
 
-            # TODO Flip vertical
+            # FUTURE Flip vertical
 
-            # TODO Flip horizontal
+            # FUTURE Flip horizontal
 
-            # TODO Some fancy filter
+            # FUTURE Some fancy filter
             j += 1
             print("\rOPENCV OPT TRIAL | patient %d of 100 | slice %d of 100" % (i, j), end='')
             timings['cv2_opt_slices'].append(time.time()-slice_start)
@@ -61,11 +61,11 @@ if __name__ == '__main__':
             # Resize up
             up = cv2.resize(slice, (1000, 1000))
 
-            # TODO Flip vertical
+            # FUTURE Flip vertical
 
-            # TODO Flip horizontal
+            # FUTURE Flip horizontal
 
-            # TODO Some fancy filter
+            # FUTURE Some fancy filter
             j += 1
             print("\rOPENCV TRIAL | patient %d of 100 | slice %d of 100" % (i, j), end='')
             timings['cv2_slices'].append(time.time()-slice_start)
@@ -91,11 +91,11 @@ if __name__ == '__main__':
             # Resize up
             up = transform.resize(slice, (1000, 1000, 3))
 
-            # TODO Flip vertical
+            # FUTURE Flip vertical
 
-            # TODO Flip horizontal
+            # FUTURE Flip horizontal
 
-            # TODO Some fancy filter
+            # FUTURE Some fancy filter
 
             j += 1
             print("\rSKIMAGE TRIAL | patient %d of 100 | slice %d of 100" % (i, j), end='')

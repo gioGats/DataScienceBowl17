@@ -33,7 +33,7 @@ if __name__ == '__main__':
             self.test_patient_dir = '/nvme/stage1_data/sample_images/0a0c32c9e08cc2ea76a71649de56be6d'
 
         def test_mirroring(self):
-            # FUTURE visually test mirroring
+            # SPRINT2 visually test mirroring
             pass
 
         def test_two_d_preprocess(self):

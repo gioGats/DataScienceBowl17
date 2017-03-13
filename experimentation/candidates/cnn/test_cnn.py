@@ -10,11 +10,11 @@ import numpy
 import pickle
 
 if __name__ == '__main__':
-    DEFAULT_input_2dtensor = [None, 100, 100, 3]  # TODO Arbitrary
-    DEFAULT_input_3dtensor = [None, 100, 100, 25, 3]  # TODO Arbitrary
+    DEFAULT_input_2dtensor = [None, 100, 100]
+    DEFAULT_input_3dtensor = [None, 100, 100, 50]
     DEFAULT_output_dimension = 1
 
-    with open('/raw/trial_2d.np', 'rb') as f:  # TODO Pickle an example
+    with open('/raw/trial_2d.np', 'rb') as f:  # SPRINT2 Pickle an example
         trial_2d = pickle.load(f)
         assert(isinstance(trial_2d, numpy.array))
         f.close()
@@ -28,11 +28,11 @@ if __name__ == '__main__':
         try:
             assert(isinstance(model_2d, tflearn.DNN))  # TODO Verify in tflearn docs
             prediction = model_2d.predict(trial_2d)
-            # TODO Validate prediction is as specified in default_output_tensor
+            # SPRINT2 Validate prediction is as specified in default_output_tensor
         except NotImplementedError:
             print("%s not implemented" % str(model_2d))
 
-    with open('/raw/trial_3d.np', 'rb') as f:  # TODO Pickle an example
+    with open('/raw/trial_3d.np', 'rb') as f:  # SPRINT2 Pickle an example
         trial_3d = pickle.load(f)
         assert(isinstance(trial_3d, numpy.array))
         f.close()
@@ -46,6 +46,6 @@ if __name__ == '__main__':
         try:
             assert(isinstance(model_3d, tflearn.DNN))  # TODO Verify in tflearn docs
             prediction = model_3d.predict(trial_3d)
-            # TODO Validate prediction is as specified in default_output_tensor
+            # SPRINT2 Validate prediction is as specified in default_output_tensor
         except NotImplementedError:
             print("%s not implemented" % str(model_3d))

@@ -28,7 +28,7 @@ def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
     chunk_array = None
     i = 0
     total = len(os.listdir(top_directory))
-    #h5f = h5py.File(name_dataset(x=x, y=y, slices=slices, mode=mode,
+    #h5f = h5py.File('/nvme/candidate_datasets/%s' % name_dataset(x=x, y=y, slices=slices, mode=mode,
     #                             processing=processing, mirroring_axes=mirroring_axes), 'w')
 
     for patient_dir in os.listdir(top_directory):
@@ -42,9 +42,9 @@ def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
                                                    mode=mode, processing=processing, mirroring_axes=mirroring_axes)
         i += 1
         if i % chunk_size == 0 and not chunk_size == -1:
-            # FUTURE Save dataset_array to h5f and reset chunk_array
+            # SPRINT2 Save dataset_array to h5f and reset chunk_array
             chunk_array = None
-            # FUTURE Handle data splits in an efficient way (train/test; x/y)
+            # SPRINT2 Handle data splits in an efficient way (train/test; x/y)
         else:
             #print(chunk_array.shape)
             #print(processed_patient.shape)
