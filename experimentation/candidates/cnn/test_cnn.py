@@ -1,20 +1,22 @@
-from .alexnet import alexnet_model_2d, alexnet_model_3d
-from .highway_conv import highway_model_2d, highway_model_3d
-from .inception_resnet_v2 import inception_resnet_v2_2d, inception_resnet_v2_3d
-from .inception_v3 import inception_v3_2d, inception_v3_3d
-from .inception_v4 import inception_v4_2d, inception_v4_3d
-from .net_in_net import network_in_network_2d, network_in_network_3d
+from alexnet import alexnet_model_2d, alexnet_model_3d
+from highway_conv import highway_model_2d, highway_model_3d
+from inception_resnet_v2 import inception_resnet_v2_2d, inception_resnet_v2_3d
+from inception_v3 import inception_v3_2d, inception_v3_3d
+from inception_v4 import inception_v4_2d, inception_v4_3d
+from net_in_net import network_in_network_2d, network_in_network_3d
 
 import tflearn
 import numpy
 import pickle
+import traceback
+import sys
 
 if __name__ == '__main__':
-    DEFAULT_input_2dtensor = [None, 100, 100]
-    DEFAULT_input_3dtensor = [None, 100, 100, 50]
+    DEFAULT_input_2dtensor = [None, 50, 50, 1]
+    DEFAULT_input_3dtensor = [None, 50, 50, 25, 1]
     DEFAULT_output_dimension = 1
-
-    with open('/raw/trial_2d.np', 'rb') as f:  # SPRINT2 Pickle an example
+    """
+    with open('raw/trial_2d.np', 'rb') as f:  # SPRINT2 Pickle an example
         trial_2d = pickle.load(f)
         assert(isinstance(trial_2d, numpy.array))
         f.close()
@@ -31,10 +33,10 @@ if __name__ == '__main__':
             # SPRINT2 Validate prediction is as specified in default_output_tensor
         except NotImplementedError:
             print("%s not implemented" % str(model_2d))
-
-    with open('/raw/trial_3d.np', 'rb') as f:  # SPRINT2 Pickle an example
+    """
+    with open('raw/trial_3d.np', 'rb') as f:  # SPRINT2 Pickle an example
         trial_3d = pickle.load(f)
-        assert(isinstance(trial_3d, numpy.array))
+        assert(isinstance(trial_3d, numpy.ndarray))
         f.close()
 
     for model_3d in [alexnet_model_3d(DEFAULT_input_3dtensor, DEFAULT_output_dimension),
@@ -46,6 +48,9 @@ if __name__ == '__main__':
         try:
             assert(isinstance(model_3d, tflearn.DNN))  # TODO Verify in tflearn docs
             prediction = model_3d.predict(trial_3d)
+            print(prediction)
             # SPRINT2 Validate prediction is as specified in default_output_tensor
         except NotImplementedError:
             print("%s not implemented" % str(model_3d))
+        except Exception:
+            traceback.print_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])

@@ -3,6 +3,8 @@ import numpy as np
 import h5py
 import sys
 
+# FUTURE Note: GDrive upload size limit is 5.2TB
+
 stage1_data = '/nvme/stage1_data/stage1'
 stage1_sample = '/nvme/stage1_data/sample_images'
 
