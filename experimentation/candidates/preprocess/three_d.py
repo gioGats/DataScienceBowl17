@@ -16,7 +16,7 @@ resizing natively.  We should strongly consider an openCV model to speed this up
 
 def three_d_preprocess(dicom_directory,
                        x=512, y=512, slices=100,
-                       mode=None, processing='', mirroring_axes=None):
+                       mode=None, processing='', mirroring=False, blurring=False):
     """
     Processes a directory of dicom files into a numpy array. (3D)
     :param dicom_directory: path to directory with dicom files
@@ -59,18 +59,13 @@ def three_d_preprocess(dicom_directory,
         patient_array = resize(patient_array, (x, y, slices), mode=mode)
         patient_array = np.swapaxes(patient_array, 0, 2)  # SPRINT2 Visually verify this operation
 
-    # Apply mirroring
-    return_arrays = np.array([patient_array, label])
-    if mirroring_axes is not None:
-        if 'lr' in mirroring_axes:  # mirror x axis
-            array_to_add = np.array([np.flip(patient_array, 1), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
-        if 'ud' in mirroring_axes:  # mirror y axis
-            array_to_add = np.array([np.flip(patient_array, 2), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
-        if 'fb' in mirroring_axes and slices >= 0:  # mirror z axis
-            array_to_add = np.array([np.flip(patient_array, 0), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
+    return_arrays = np.array([initial_array, label])
+
+    if mirroring:
+        return_arrays = mirror_array(return_arrays)
+    if blurring:
+        return_arrays = blur_array(return_arrays)
+
     # SPRINT2 Add blurring
     return return_arrays
 
@@ -118,6 +113,26 @@ def get_pixels_hu(slices):
     return np.array(image, dtype=np.int16)
 
 
+def mirror_array(initial_array):
+    return_arrays = initial_array
+    if mirroring:
+        for arr in return_arrays:
+            array_to_add = np.array([np.flip(arr, 1), label])
+            return_arrays = np.vstack((return_arrays, array_to_add))
+        for arr in return_arrays:
+            array_to_add = np.array([np.flip(arr, 2), label])
+            return_arrays = np.vstack((return_arrays, array_to_add))
+        for arr in return_arrays:
+            array_to_add = np.array([np.flip(arr, 0), label])
+            return_arrays = np.vstack((return_arrays, array_to_add))
+    return return_arrays
+
+
+def blur_array(initial_arrays):
+    # TODO Blurring
+    return initial_arrays
+
+
 if __name__ == '__main__':
     import unittest
 
@@ -125,7 +140,7 @@ if __name__ == '__main__':
     class TestThreeDPreprocess(unittest.TestCase):
         def setUp(self):
             self.params_3d = {'x': 100, 'y': 100, 'slices': 50, 'mode': None,
-                              'processing': '', 'mirroring_axes': None}
+                              'processing': '', 'mirroring': False, 'blurring': False}
             self.test_patient_dir = '/nvme/stage1_data/sample_images/0a0c32c9e08cc2ea76a71649de56be6d'
 
         def test_get_label(self):
@@ -149,16 +164,19 @@ if __name__ == '__main__':
 
             # SPRINT3 unit test get_pixels_hu in more depth
 
-        def test_mirroring(self):
-            # SPRINT2 visually test mirroring
-            pass
+        def test_mirror_array(self):
+            self.fail('Not implemented')
+
+        def test_blur_array(self):
+            self.fail('Not implemented')
 
         def test_three_d_preprocess(self):
             v = three_d_preprocess(self.test_patient_dir, x=self.params_3d['x'], y=self.params_3d['y'],
                                    slices=self.params_3d['slices'], mode=self.params_3d['mode'],
                                    processing=self.params_3d['processing'],
-                                   mirroring_axes=self.params_3d['mirroring_axes'])
-            assert(self.params_3d['mirroring_axes'] is None)  # Not written to check mirroring code yet
+                                   mirroring=self.params_3d['mirroring'], blurring=self.params_3d['blurring'])
+            assert(self.params_3d['mirroring'] is None)  # Not written to check mirroring code yet
+            assert(self.params_3d['blurring'] is None)  # Not written to check blurring code yet
             self.assertEqual(v.shape, (2,))
             self.assertIsInstance(v[1], int)
             self.assertEqual(v[0].shape, (self.params_3d['slices'],

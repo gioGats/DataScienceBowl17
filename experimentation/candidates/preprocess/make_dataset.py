@@ -13,7 +13,7 @@ problems in the larger datasets.
 
 
 def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
-                 processing='', mirroring_axes=None, chunk_size=10, dest=None):
+                 processing='', mirroring=False, blurring=False, chunk_size=10, dest=None):
     """
     Applys function parameters to make an h5py dataset of all patients in top_directory.
     :param top_directory: path to directory with patient directories
@@ -58,7 +58,8 @@ def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
 
     if chunk_size == -1:
         import pickle
-        name = name_dataset(x=x, y=y, slices=slices, mode=mode, processing=processing, mirroring_axes=mirroring_axes)
+        name = name_dataset(x=x, y=y, slices=slices, mode=mode,
+                            processing=processing, mirroring=mirroring, blurring=blurring)
         if dest is None:
             name = name[:-2] + 'np'
         else:
@@ -72,17 +73,17 @@ def array_merge(dataset_array, new_example_array):
     return np.vstack((dataset_array, new_example_array))
 
 
-def name_dataset(x, y, slices, mode, processing, mirroring_axes):
+def name_dataset(x, y, slices, mode, processing, mirroring, blurring):
     if mode is None:
         mode = 'constant'  # default
     if processing == '':
         processing = 'hu'  # default
-    if mirroring_axes is None:
+    if mirroring is None:
         mirroring_axes = 'none'  # default
     if slices <= 0:
-        return '2D_%dx%d_%s_%s_%s.h5' % (x, y, mode, processing, mirroring_axes)
+        return '2D_%dx%d_%s_%s_mirror%s_blur%s.h5' % (x, y, mode, processing, str(mirroring), str(blurring))
     else:
-        return '3D_%dx%dx%d_%s_%s_%s.h5' % (x, y, slices, mode, processing, mirroring_axes)
+        return '3D_%dx%dx%d_%s_mirror%s_blur%s.h5' % (x, y, slices, mode, processing, str(mirroring), str(blurring))
 
 
 if __name__ == '__main__':
