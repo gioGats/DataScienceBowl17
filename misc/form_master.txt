@@ -76,7 +76,7 @@ done
 IFS=$OLDIFS
 
 echo
-echo 'Done!
+echo 'Done!'
 cd ../../../..
 
 #####################
