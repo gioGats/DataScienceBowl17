@@ -126,7 +126,7 @@ do
 	then
 		cd ${patient}
 		DCDIR = find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=50{print $1}' | sed -n 3p
-		if [${diag} == "b*"] #check
+		if [${diag} == "B*"] #check
 		then #Benign nodule
 			mv ${DCDIR} ../../../../Masterdata/${patient}_0
 		else #Primary lung cancer
