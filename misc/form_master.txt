@@ -54,7 +54,7 @@ cd DOI
 INPUT=tcia-diagnosis-data-2012-04-20.xls
 OLDIFS=$IFS
 IFS=,
-sed 1d $INPUT | while read patient cval
+sed 1d $INPUT | while read patient cval o p q r s t u v w x y z
 do
 	if [${cval} = 2] || [${cval} = 3] #Patient has cancer
 	then
