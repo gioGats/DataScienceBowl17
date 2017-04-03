@@ -14,6 +14,7 @@ def two_d_preprocess(dicom_directory, x=512, y=512,
     :param mirroring_axes: 0 or more of ['lr', 'ud', 'fb']
     :return: np.array of [[slices, x, y], label]
     """
+    raise DeprecationWarning
     from .three_d import three_d_preprocess
     # These relative imports are going to vary;
     # Need to update using init/setup files.

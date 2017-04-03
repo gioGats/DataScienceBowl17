@@ -33,13 +33,14 @@ MOD: Still needs addition of pre-trained CNN models and
     transfer learning code functionality
 
 FILES: /DSB17/exp/cand/preprocess
-MOD: TODO lists created for three_d.py, make_dataset.py
+MOD: TODO lists created for three_d.py, make_dataset.py;
+    deprecated two_d.py.
 
 FILES: /DSB17/exp
 MOD: Added make_2d_clf.py and make_3d_clf.py interfaces
     for building tflearn clf objects with desired params;
-    HDF5 implementation for make_datasets.py
-
+    HDF5 implementation for make_datasets.py; TODO list
+    for make_datasets.py.
 
 =======================================================
 REMAINING
@@ -52,4 +53,9 @@ TODO: Incorporate blurring code
     -Reject additional pre-processing functions for now
 
 FILES: /DSB17/exp/cand/preprocess/make_dataset.py
-TODO: Incorporate blurring code
+TODO: Record metadata
+    -Preprocess function lambda
+    -Port unit testing from old file
+
+FILES: All
+TODO: Update documentation
