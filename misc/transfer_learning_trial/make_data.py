@@ -11,7 +11,7 @@ See:
 https://research.googleblog.com/2016/03/train-your-own-image-classifier-with.html
 https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/image_retraining/retrain.py
 """
-
+raise DeprecationWarning("DEPRECATION WARNING: This file not updated for 2APR refactor")
 
 # Use sample directory (1.4GB) instead of main directory (140GB)
 DEBUG = False

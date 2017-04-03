@@ -4,15 +4,6 @@ import dicom
 from skimage.transform import resize
 import os
 
-"""
-=================================================================================
-For this branch (modular_preprocess), I have arbitrarily selected skimage as the
-image preprocessing library.  It has unbelievably worse time performance compared
-to openCV (11s vs 770s).  But it has much superior documentation and supports 3D
-resizing natively.  We should strongly consider an openCV model to speed this up.
-=================================================================================
-"""
-
 
 def three_d_preprocess(dicom_directory,
                        x=512, y=512, slices=100,
@@ -37,9 +28,6 @@ def three_d_preprocess(dicom_directory,
     # Bring all dicoms in dicom_directory into memory
     patient_array = load_scan(dicom_directory)
 
-    # SPRINT3 Use str param for processing to specify more processing functions
-    # Look to kaggle tutorials for inspiration
-
     if processing == '' or 'hu':
         # adjust pixel values  with processing function
         patient_array = get_pixels_hu(patient_array)
@@ -47,35 +35,23 @@ def three_d_preprocess(dicom_directory,
     patient_id = dicom_directory.split('/')[-1]
     label = get_label(patient_id)
 
-    # SPRINT3 Speed up the resizing/mirroring code (multi-thread or gpu)
-    # Look into opencv/other libraries
-
-    # Apply 2D resizing
-    if slices <= 0:
-        patient_array = resize(patient_array, (x, y, len(patient_array)), mode=mode)
-        patient_array = np.swapaxes(patient_array, 0, 2)  # SPRINT2 Visually verify this operation
-    # Apply 3D resizing
-    else:
-        patient_array = resize(patient_array, (x, y, slices), mode=mode)
-        patient_array = np.swapaxes(patient_array, 0, 2)  # SPRINT2 Visually verify this operation
-
-    return_arrays = np.array([initial_array, label])
+    # Apply resizing
+    patient_array = resize_image(patient_array, shape=(x, y, slices), mode=mode)
+    return_arrays = np.array([initial_array, label], dtype='int16')
 
     if mirroring:
         return_arrays = mirror_array(return_arrays)
     if blurring:
         return_arrays = blur_array(return_arrays)
-
-    # SPRINT2 Add blurring
     return return_arrays
 
 
 def get_label(patient_id, data_dir='/nvme/stage1_data/'):
-    # FUTURE May want to abstract this to a higher level;
+    # TODO Update for directory naming
     # passing a labels file as input, instead of loading the labels file for every patient.
     labels_df = pd.read_csv(data_dir + 'stage1_labels.csv', index_col=0)
     label = labels_df.get_value(patient_id, 'cancer')
-    # SPRINT3 Troubleshoot patient '0b20184e0cd497028bdd155d9fb42dc9'
+    # TODO Troubleshoot patient '0b20184e0cd497028bdd155d9fb42dc9'
     # Currently removed from sample images dataset because it doesn't have a label in stage1_labels.csv
     return int(label)
 
@@ -115,16 +91,15 @@ def get_pixels_hu(slices):
 
 def mirror_array(initial_array):
     return_arrays = initial_array
-    if mirroring:
-        for arr in return_arrays:
-            array_to_add = np.array([np.flip(arr, 1), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
-        for arr in return_arrays:
-            array_to_add = np.array([np.flip(arr, 2), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
-        for arr in return_arrays:
-            array_to_add = np.array([np.flip(arr, 0), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
+    for arr in return_arrays:
+        array_to_add = np.array([np.flip(arr, 1), label])
+        return_arrays = np.vstack((return_arrays, array_to_add))
+    for arr in return_arrays:
+        array_to_add = np.array([np.flip(arr, 2), label])
+        return_arrays = np.vstack((return_arrays, array_to_add))
+    for arr in return_arrays:
+        array_to_add = np.array([np.flip(arr, 0), label])
+        return_arrays = np.vstack((return_arrays, array_to_add))
     return return_arrays
 
 
@@ -132,6 +107,13 @@ def blur_array(initial_arrays):
     # TODO Blurring
     return initial_arrays
 
+
+def resize_image(patient_array, shape, mode):
+    if shape[2] <= 0:
+        shape = (shape[0], shape[1], len(patient_array))
+    patient_array = resize(patient_array, shape, mode=mode)
+    patient_array = np.swapaxes(patient_array, 0, 2)
+    return patient_array
 
 if __name__ == '__main__':
     import unittest
@@ -151,7 +133,7 @@ if __name__ == '__main__':
             self.assertEqual(get_label('0a38e7597ca26f9374f8ea2770ba870d'), 0)
 
         def test_load_scan(self):
-            # SPRINT3 unit test load_scan
+            # FUTURE unit test load_scan
             pass
 
         def test_get_pixels_hu(self):
@@ -162,7 +144,7 @@ if __name__ == '__main__':
             self.assertEqual(patient_array[0].shape, (patient_array.shape[1], patient_array.shape[2]))
             self.assertIsInstance(patient_array[0][0][0], np.int16)
 
-            # SPRINT3 unit test get_pixels_hu in more depth
+            # FUTURE unit test get_pixels_hu in more depth
 
         def test_mirror_array(self):
             self.fail('Not implemented')

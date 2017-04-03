@@ -2,15 +2,7 @@ import numpy as np
 import h5py
 import os
 
-"""
-=================================================================================
-For this branch (modular_preprocess), I have yet to implement full h5py
-functionality.  Eventually, it looks like we will need a chunk-oriented save
-operation.  This is not an issue initally with sample images, but will cause
-problems in the larger datasets.
-=================================================================================
-"""
-
+TOP_DIRECTORY = '/storage/nstc'
 
 def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
                  processing='', mirroring=False, blurring=False, chunk_size=10, dest=None):
@@ -22,8 +14,9 @@ def make_dataset(top_directory, x=512, y=512, slices=100, mode=None,
     :param slices: number of slices in output
     :param mode: None or one of 'constant', 'edge', 'symmetric', 'reflect', 'wrap'
     :param processing: 'hu'
-    :param mirroring_axes: None or one or more of ['lr', 'ud', 'fb']
-    :param chunk_size: Number of patients per h5f chunk.
+    :param mirroring: bool, use mirroring to increase sample set
+    :param blurring: bool, use blurring to increase sample set
+    :param chunk_size: Number of patients to process before flushing data to disk.
     """
     chunk_array = None
     i = 0
@@ -73,17 +66,22 @@ def array_merge(dataset_array, new_example_array):
     return np.vstack((dataset_array, new_example_array))
 
 
-def name_dataset(x, y, slices, mode, processing, mirroring, blurring):
-    if mode is None:
-        mode = 'constant'  # default
-    if processing == '':
-        processing = 'hu'  # default
-    if mirroring is None:
-        mirroring_axes = 'none'  # default
-    if slices <= 0:
-        return '2D_%dx%d_%s_%s_mirror%s_blur%s.h5' % (x, y, mode, processing, str(mirroring), str(blurring))
+def name_dataset(shape, mode='constant', processing='hu', mirroring=True, blurring=False):
+    if shape[2] <= 0:
+        return_string = '2D_(%d,%d)_%s_%s' % (shape[0], shape[1], mode, processing)
     else:
-        return '3D_%dx%dx%d_%s_mirror%s_blur%s.h5' % (x, y, slices, mode, processing, str(mirroring), str(blurring))
+        return_string = '3D_(%d,%d,%d)_%s_%s' % (shape[0], shape[1], shape[2], mode, processing)
+    if mirroring:
+        return_string += 'M'
+    if blurring:
+        return_string += 'B'
+    return return_string + 'hdf5'
+
+
+def make_dataset2(subsets, shape, mode='constant', processing='hu', mirroring=True, blurring=False):
+    f = h5py.File(name_dataset(shape, mode, processing, mirroring, blurring))
+    patient_ids = np.array(os.listdir(TOP_DIRECTORY))
+
 
 
 if __name__ == '__main__':
