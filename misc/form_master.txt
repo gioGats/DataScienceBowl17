@@ -60,13 +60,13 @@ do
 	then
 		cd ${patient}
 		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
-		mv ${DCDIR} ../../../../Masterdata/${patient}_1
+		mv ${DCDIR} ../../../Masterdata/${patient}_1
 		cd ..
 	elif [$cval = 1] #Patient does not have cancer/diagnosed with unrelated disease
 	then
 		cd ${patient}
 		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
-		mv ${DCDIR} ../../../../Masterdata/${patient}_1
+		mv ${DCDIR} ../../../Masterdata/${patient}_1
 		cd ..
 	else #Patient has a zero... Unknown classification
 		continue
@@ -88,7 +88,7 @@ for D in 'find . -type d'
 do
 	cd ${D}
 	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
-	mv ${DCDIR} ../../../../Masterdata/${D}_1
+	mv ${DCDIR} ../../../Masterdata/${D}_1
 	cd ..
 done
 
@@ -112,9 +112,9 @@ do
 	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 	if [${diag} == b*] #check
 	then #benign
-		mv ${DCDIR} ../../../../Masterdata/${patient}_0
+		mv ${DCDIR} ../../../Masterdata/${patient}_0
 	else #malignant
-		mv ${DCDIR} ../../../../Masterdata/${patient}_1
+		mv ${DCDIR} ../../../Masterdata/${patient}_1
 	fi
 done 
 < $INPUT
@@ -128,9 +128,9 @@ do
 	        DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 		if [${diag} == B*] #check
 		then #Benign nodule
-			mv ${DCDIR} ../../../../Masterdata/${patient}_0
+			mv ${DCDIR} ../../../Masterdata/${patient}_0
 		else #Primary lung cancer
-			mv ${DCDIR} ../../../../Masterdata/${patient}_1
+			mv ${DCDIR} ../../../Masterdata/${patient}_1
 		cd ..
 		fi
 	else
@@ -155,7 +155,7 @@ for D in 'find . -type d'
 do
 	cd ${D}
 	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
-	mv ${DCDIR} ../../../Masterdata/${D}_1
+	mv ${DCDIR} ../../Masterdata/${D}_1
 	cd ..
 done
 
