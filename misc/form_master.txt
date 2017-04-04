@@ -15,15 +15,15 @@ echo
 echo 'Untaring files...'
 echo
 echo 'Unzip stage1.7z...'
-tar -xvf stage1.gz
+tar -xf stage1.gz
 echo 'Untaring lidc-idrl.tar...'
-tar -xvf lidc-idrl.tar.gz
+tar -xf lidc-idrl.tar.gz
 echo 'Untaring rider.tar...'
-tar -xvf rider.tar.gz
+tar -xf rider.tar.gz
 echo 'Untaring spie-aapm.tar...'
-tar -xvf spie-aapm.tar.gz
+tar -xf spie-aapm.tar.gz
 echo 'Untaring time.tar...'
-tar -xvf time.tar.gz
+tar -xf time.tar.gz
 echo "Making directory 'Masterdata'..."
 mkdir Masterdata
 echo "Moving and Renaming 'stage1' directory..."
