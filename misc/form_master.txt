@@ -47,8 +47,8 @@ cd ..
 #####################
 
 echo 'Working on LUNA2016 data...'
-cd lidc-idrl/LIDC-IDRL
-mv tcia-diagnosis-data-2012-04-20 DOI
+cd LIDC-IDRL
+mv tcia-diagnosis-data-2012-04-20.xls DOI
 cd DOI
 
 INPUT=tcia-diagnosis-data-2012-04-20.xls
@@ -59,14 +59,14 @@ do
 	if [${cval} = 2] || [${cval} = 3] #Patient has cancer
 	then
 		cd ${patient}
-		DCDIR = find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p
+		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 		mv ${DCDIR} ../../../../Masterdata/${patient}_1
 		cd ..
 	elif [$cval = 1] #Patient does not have cancer/diagnosed with unrelated disease
 	then
 		cd ${patient}
-		DCDIR = find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p
-		mv ${DCDIR} ../../../../Masterdata/${patient}_0
+		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
+		mv ${DCDIR} ../../../../Masterdata/${patient}_1
 		cd ..
 	else #Patient has a zero... Unknown classification
 		continue
@@ -82,12 +82,12 @@ cd ../../../..
 #####################
 
 echo 'Starting on Rider data...'
-cd rider/RIDER/DOI
+cd RIDER/DOI
 
 for D in 'find . -type d'
 do
 	cd ${D}
-	DCDIR = find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=50{print $1}' | sed -n 3p
+	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 	mv ${DCDIR} ../../../../Masterdata/${D}_1
 	cd ..
 done
@@ -99,17 +99,17 @@ cd ../../..
 #####################
 
 echo 'Starting on SPIE-AAPM data...'
-cd spie-aapm/SPIE-AAPM
+cd SPIE-AAPM
 mv -t DOT Cal* Test*
 cd DOI
 
-INPUT= CalibrationSet_NoduleData.xlsx
+INPUT=CalibrationSet_NoduleData.xlsx
 OLDIFS=$IFS
 IFS=,
 sed -n '2,11p' $INPUT | while read patient xy center diag
 do
 	cd ${patient}
-	DCDIR = find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=50{print $1}' | sed -n 3p
+	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 	if [${diag} == b*] #check
 	then #benign
 		mv ${DCDIR} ../../../../Masterdata/${patient}_0
@@ -119,13 +119,13 @@ do
 done 
 < $INPUT
 
-INPUT = TestSet_NoduleData_PublicRelease_wTruth.xlsx
+INPUT=TestSet_NoduleData_PublicRelease_wTruth.xlsx
 sed -n '2,74p' $INPUT | while read patient nod pos center diag
 do
 	if [${nod} == 1]
 	then
 		cd ${patient}
-		DCDIR = find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=50{print $1}' | sed -n 3p
+	        DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 		if [${diag} == B*] #check
 		then #Benign nodule
 			mv ${DCDIR} ../../../../Masterdata/${patient}_0
@@ -146,7 +146,7 @@ cd ../../..
 
 #####################
 echo 'Starting on TIME data...'
-cd time/TIME
+cd TIME
 echo 'Untaring TIME2.tar...'
 tar -xvf TIME2.tar.gz
 echo 'Working on TIME data...'
@@ -154,7 +154,7 @@ echo 'Working on TIME data...'
 for D in 'find . -type d'
 do
 	cd ${D}
-	DCDIR = find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=50{print $1}' | sed -n 1p
+	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 	mv ${DCDIR} ../../../Masterdata/${D}_1
 	cd ..
 done
