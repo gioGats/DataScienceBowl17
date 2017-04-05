@@ -27,6 +27,14 @@ tar -xf time.tar.gz
 echo "Making directory 'Masterdata'..."
 mkdir Masterdata
 echo "Moving and Renaming 'stage1' directory..."
+echo
+echo
+echo
+echo
+ls
+echo
+echo
+echo
 mv stage1_labels.csv stage1
 cd stage1
 
@@ -47,7 +55,21 @@ cd ..
 #####################
 
 echo 'Working on LUNA2016 data...'
+echo
+echo
+echo
+ls
+echo
+echo
+echo
 cd LIDC-IDRL
+echo
+echo
+echo
+ls
+echo
+echo
+echo
 mv tcia-diagnosis-data-2012-04-20.xls DOI
 cd DOI
 
@@ -56,13 +78,13 @@ OLDIFS=$IFS
 IFS=,
 sed 1d $INPUT | while read patient cval o p q r s t u v w x y z #Possible Problem Line...
 do
-	if [${cval} = 2] || [${cval} = 3] #Patient has cancer
+	if [ $cval -eq 2 ] || [ $cval -eq 3 ] #Patient has cancer
 	then
 		cd ${patient}
 		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
 		mv ${DCDIR} ../../../Masterdata/${patient}_1
 		cd ..
-	elif [$cval = 1] #Patient does not have cancer/diagnosed with unrelated disease
+	elif [ $cval -eq 1 ] #Patient does not have cancer/diagnosed with unrelated disease
 	then
 		cd ${patient}
 		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
@@ -77,11 +99,25 @@ IFS=$OLDIFS
 
 echo
 echo 'Done!'
-cd ../../../..
+echo
+echo
+echo
+ls
+echo
+echo
+echo
+cd ../..
 
 #####################
 
 echo 'Starting on Rider data...'
+echo
+echo
+echo
+ls
+echo
+echo
+echo
 cd RIDER/DOI
 
 for D in 'find . -type d'
@@ -94,7 +130,14 @@ done
 
 echo
 echo 'Done!'
-cd ../../..
+echo
+echo
+echo
+ls
+echo
+echo
+echo
+cd ../..
 
 #####################
 
@@ -110,7 +153,7 @@ sed -n '2,11p' $INPUT | while read patient xy center diag
 do
 	cd ${patient}
 	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
-	if [${diag} == b*] #check
+	if [[ $diag == b* ]] #check
 	then #benign
 		mv ${DCDIR} ../../../Masterdata/${patient}_0
 	else #malignant
@@ -122,11 +165,11 @@ done
 INPUT=TestSet_NoduleData_PublicRelease_wTruth.xlsx
 sed -n '2,74p' $INPUT | while read patient nod pos center diag
 do
-	if [${nod} == 1]
+	if [ $nod -eq 1 ]
 	then
 		cd ${patient}
 	        DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
-		if [${diag} == B*] #check
+		if [[ $diag == B* ]] #check
 		then #Benign nodule
 			mv ${DCDIR} ../../../Masterdata/${patient}_0
 		else #Primary lung cancer
@@ -142,7 +185,7 @@ IFS=$OLDIFS
 
 echo 
 echo 'Done!'
-cd ../../..
+cd ../..
 
 #####################
 echo 'Starting on TIME data...'
