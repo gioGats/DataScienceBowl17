@@ -34,7 +34,9 @@ MOD: Still needs addition of pre-trained CNN models and
 
 FILES: /DSB17/exp/cand/preprocess
 MOD: TODO lists created for three_d.py, make_dataset.py;
-    deprecated two_d.py.
+    deprecated two_d.py; Reject additional pre-processing
+    functions for now; get_label() replaced with directory
+    naming
 
 FILES: /DSB17/exp
 MOD: Added make_2d_clf.py and make_3d_clf.py interfaces
@@ -45,17 +47,7 @@ MOD: Added make_2d_clf.py and make_3d_clf.py interfaces
 =======================================================
 REMAINING
 =======================================================
-FILES: /DSB17/exp/cand/preprocess/three_d.py
-TODO: Incorporate blurring code
-    -Troubleshoot patient '0b20184e0cd497028bdd155d9fb42dc9'
-    -Confirm structure for new get_label function with class
-    appended to end of directory name
-    -Reject additional pre-processing functions for now
-
 FILES: /DSB17/exp/cand/preprocess/make_dataset.py
 TODO: Record metadata
     -Preprocess function lambda
     -Port unit testing from old file
-
-FILES: All
-TODO: Update documentation

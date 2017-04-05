@@ -1,59 +1,58 @@
-/storage/nstc
+/storage
+    /nstc
+        /DataScienceBowl17 (project tld)
+            /experimentation (stores candidate model generation functions)
+                /requirements.txt (experimentation required libraries; not recommended for production code)
+                /candidates
+                    /cnn
+                    /probability
+                    /rnn
+                    /preprocess
+            /production_1 (stores pre-trained model 1)
+                /requirements.txt (production_1 required libraries)
+            /production_2 (stores pre-trained model 2)
+                /requirements.txt (production_2 required libraries)
+            /CLI.py
 
-    /DataScienceBowl17 (project tld)
-        /experimentation (stores candidate model generation functions)
-            /requirements.txt (experimentation required libraries; not recommended for production code)
-            /candidates
-                /cnn
-                /probability
-                /rnn
-                /preprocess
-        /production_1 (stores pre-trained model 1)
-            /requirements.txt (production_1 required libraries)
-        /production_2 (stores pre-trained model 2)
-            /requirements.txt (production_2 required libraries)
-        /CLI.py
+            /misc
+                /local_client
+                    * scripts for handling client-server interfacing; deprecated and probably should discard
+                /remote_client
+                    * scripts for handling client-server interfacing; deprecated and probably should discard
+                /transfer_learning_trial
+                    * scripts for a transfer learning example; deprecated and for example only
+                /download_additional_data.sh (downloads additional data; implementation pending large file hosting)
+                /make_cnn_testing_datasets.sh (calls Python make_dataset functions; deprecated)
+                /remove_ds_store.sh (removes those pesky .DS_Store files from MacOS)
+        /candidate_datasets (all variants of preprocessed datasets)
+                *naming convention in /DataScienceBowl17/experimentation/candidates/preprocess/make_dataset.py: name_dataset()
 
-        /misc
-            /local_client
-                * scripts for handling client-server interfacing; deprecated and probably should discard
-            /remote_client
-                * scripts for handling client-server interfacing; deprecated and probably should discard
-            /transfer_learning_trial
-                * scripts for a transfer learning example; deprecated and for example only
-            /download_additional_data.sh (downloads additional data; implementation pending large file hosting)
-            /make_cnn_testing_datasets.sh (calls Python make_dataset functions; deprecated)
-            /remove_ds_store.sh (removes those pesky .DS_Store files from MacOS)
+        /testing (stage 2 data, when released by competition)
+            *unk arrival structure, standardize to
+            /test_images
+                -testing patient ids
+                    -testing dicom slices
+            -submission_clf#_#.csv (submission files, incremented)
+
+        /transfer_learning_example
+            -misc files from transfer learning codelab
+
+    /data
+        /compressed_data (copy of all compressed archives; a compressed version of this directory is used to download training data)
+            /lidc-idrl.tar.gz
+            /rider.tar.gz
+            /sample_images.tar.gz
+            /spie-aapm.tar.gz
+            /stage1.tar.gz
+            /stage1_labels.csv
+            /time.tar.gz
+
+        /raw_data (all raw training data; first in decompressed form, then in correct structure with use of Sam's script
+            /sample_images
+                -sample patient ids
+                    -sample dicom slices
+            /all_images
+                -all patient ids
+                    -all dicom slices
 
 
-
-
-    /compressed_data (copy of all compressed archives; a compressed version of this directory is used to download training data)
-        /lidc-idrl.tar.gz
-        /rider.tar.gz
-        /sample_images.tar.gz
-        /spie-aapm.tar.gz
-        /stage1.tar.gz
-        /stage1_labels.csv
-        /time.tar.gz
-
-    /raw_data (all raw training data; first in decompressed form, then in correct structure with use of Sam's script
-        /sample_images
-            -sample patient ids
-                -sample dicom slices
-        /all_images
-            -all patient ids
-                -all dicom slices
-
-    /candidate_datasets (all variants of preprocessed datasets)
-        *naming convention in /DataScienceBowl17/experimentation/candidates/preprocess/make_dataset.py: name_dataset()
-
-    /testing (stage 2 data, when released by competition)
-        *unk arrival structure, standardize to
-        /test_images
-            -testing patient ids
-                -testing dicom slices
-        -submission_clf#_#.csv (submission files, incremented)
-
-    /transfer_learning_example
-        -misc files from transfer learning codelab

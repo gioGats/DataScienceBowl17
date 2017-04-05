@@ -36,8 +36,11 @@ def generate_subset_indicies(num_subsets, num_examples):
 
 
 def make_preprocess_function(general_function, preprocess_params):
-    x = None  # Lambda magic
+    x = preprocess_params['x']
+    y = preprocess_params['y']
+
     # TODO Return a specific preprocess function that takes only the dicom_directory as input
+
     return x
 
 

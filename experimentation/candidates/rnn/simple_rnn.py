@@ -17,7 +17,6 @@ def simple_rnn(network, param_dict=None):
             'restore': True,
             'reuse': False,
             'scope': None
-
         }
     return tflearn.simple_rnn(network,
                               n_units=param_dict['n_units'],

@@ -88,6 +88,7 @@ def structure_training_data():
     # subprocess.run(['cp', '/storage/nstc/DataScienceBowl17/misc/sams_script.sh', '/storage/nstc/raw_data/'])
     # subprocess.run(['.', 'sams_script.sh'])
     # subprocess.run(['rm', 'sams_script.sh'])
+    # subprocess.run(['rm', '*.tar.gz'])
 
 
 def retrain_production_1():

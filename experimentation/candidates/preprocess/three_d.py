@@ -33,7 +33,8 @@ def three_d_preprocess(dicom_directory,
         patient_array = get_pixels_hu(patient_array)
 
     patient_id = dicom_directory.split('/')[-1]
-    label = get_label(patient_id)
+    label = int(patient_id[-1])
+    # TODO Troubleshoot patient '0b20184e0cd497028bdd155d9fb42dc9'
 
     # Apply resizing
     patient_array = resize_image(patient_array, shape=(x, y, slices), mode=mode)
@@ -44,16 +45,6 @@ def three_d_preprocess(dicom_directory,
     if blurring:
         return_arrays = blur_array(return_arrays)
     return return_arrays
-
-
-def get_label(patient_id, data_dir='/nvme/stage1_data/'):
-    # TODO Update for directory naming
-    # passing a labels file as input, instead of loading the labels file for every patient.
-    labels_df = pd.read_csv(data_dir + 'stage1_labels.csv', index_col=0)
-    label = labels_df.get_value(patient_id, 'cancer')
-    # TODO Troubleshoot patient '0b20184e0cd497028bdd155d9fb42dc9'
-    # Currently removed from sample images dataset because it doesn't have a label in stage1_labels.csv
-    return int(label)
 
 
 def load_scan(path):
