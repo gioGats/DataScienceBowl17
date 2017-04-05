@@ -15,7 +15,7 @@ echo
 echo 'Untaring files...'
 echo
 echo 'Unzip stage1.7z...'
-tar -xf stage1.gz
+tar -xf stage1.tar.gz
 echo 'Untaring lidc-idrl.tar...'
 tar -xf lidc-idrl.tar.gz
 echo 'Untaring rider.tar...'
