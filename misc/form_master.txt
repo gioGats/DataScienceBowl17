@@ -1,28 +1,32 @@
 #!/bin/bash
 
 ############
-#Sam's Form Master v1.0!
+#Sam's Form Master v2.0: The Form Master Strikes Back
 ############
 
 
 
 
 echo 'Forming Master Dataset...'
-echo -n 'Current path is:'
+echo -n 'Current path is: '
 pwd
 echo
 echo
 echo 'Untaring files...'
 echo
-echo 'Unzip stage1.7z...'
-tar -xf stage1.tar.gz
-echo 'Untaring lidc-idrl.tar...'
+echo -n 'Untaring stage1.tar.gz...'
+tar -xf stage1.gz
+echo -e 'Done!\n'
+echo -n 'Untaring lidc-idrl.tar...'
 tar -xf lidc-idrl.tar.gz
-echo 'Untaring rider.tar...'
+echo -e 'Done!\n'
+echo -n 'Untaring rider.tar...'
 tar -xf rider.tar.gz
-echo 'Untaring spie-aapm.tar...'
+echo -e 'Done!\n'
+echo -n 'Untaring spie-aapm.tar...'
 tar -xf spie-aapm.tar.gz
-echo 'Untaring time.tar...'
+echo -e 'Done!\n'
+echo -n 'Untaring time.tar...'
 tar -xf time.tar.gz
 echo "Making directory 'Masterdata'..."
 mkdir Masterdata
@@ -45,7 +49,6 @@ sed 1d $INPUT | while read patient cval
 do
 	mv ${patient} ../Masterdata/${patient}_${cval}
 done 
-< $INPUT
 IFS=$OLDIFS
 
 echo
@@ -70,31 +73,30 @@ ls
 echo
 echo
 echo
-mv tcia-diagnosis-data-2012-04-20.xls DOI
+mv tcia-diagnosis-data-2012-04-20.csv DOI
 cd DOI
 
-INPUT=tcia-diagnosis-data-2012-04-20.xls
+INPUT=tcia-diagnosis-data-2012-04-20.csv
 OLDIFS=$IFS
 IFS=,
-sed 1d $INPUT | while read patient cval o p q r s t u v w x y z #Possible Problem Line...
+sed 1d $INPUT | while read patient cval other  #Possible Problem Line...
 do
 	if [ $cval -eq 2 ] || [ $cval -eq 3 ] #Patient has cancer
 	then
 		cd ${patient}
-		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
+		DCDIR="$(find . -maxdepth 4 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
 		mv ${DCDIR} ../../../Masterdata/${patient}_1
 		cd ..
 	elif [ $cval -eq 1 ] #Patient does not have cancer/diagnosed with unrelated disease
 	then
 		cd ${patient}
-		DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
+		DCDIR="$(find . -maxdepth 4 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
 		mv ${DCDIR} ../../../Masterdata/${patient}_1
 		cd ..
 	else #Patient has a zero... Unknown classification
 		continue
 	fi
 done 
-< $INPUT
 IFS=$OLDIFS
 
 echo
@@ -120,10 +122,10 @@ echo
 echo
 cd RIDER/DOI
 
-for D in 'find . -type d'
+for D in 'find . -maxdepth 1 -type d | sed 1d'
 do
 	cd ${D}
-	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
+	DCDIR="$(find . -maxdepth 3 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
 	mv ${DCDIR} ../../../Masterdata/${D}_1
 	cd ..
 done
@@ -143,16 +145,16 @@ cd ../..
 
 echo 'Starting on SPIE-AAPM data...'
 cd SPIE-AAPM
-mv -t DOT Cal* Test*
+mv -t DOI CalibrationSet_NoduleData.csv TestSet_NoduleData_PublicRelease_wTruth.csv
 cd DOI
 
-INPUT=CalibrationSet_NoduleData.xlsx
+INPUT=CalibrationSet_NoduleData.csv
 OLDIFS=$IFS
 IFS=,
 sed -n '2,11p' $INPUT | while read patient xy center diag
 do
 	cd ${patient}
-	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
+	DCDIR="$(find . -maxdepth 3 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
 	if [[ $diag == b* ]] #check
 	then #benign
 		mv ${DCDIR} ../../../Masterdata/${patient}_0
@@ -162,13 +164,13 @@ do
 done 
 < $INPUT
 
-INPUT=TestSet_NoduleData_PublicRelease_wTruth.xlsx
+INPUT=TestSet_NoduleData_PublicRelease_wTruth.csv
 sed -n '2,74p' $INPUT | while read patient nod pos center diag
 do
 	if [ $nod -eq 1 ]
 	then
 		cd ${patient}
-	        DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
+	        DCDIR="$(find . -maxdepth 3 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
 		if [[ $diag == B* ]] #check
 		then #Benign nodule
 			mv ${DCDIR} ../../../Masterdata/${patient}_0
@@ -191,13 +193,13 @@ cd ../..
 echo 'Starting on TIME data...'
 cd TIME
 echo 'Untaring TIME2.tar...'
-tar -xvf TIME2.tar.gz
+tar -xf TIME2.tar.gz
 echo 'Working on TIME data...'
 
-for D in 'find . -type d'
+for D in 'find . -maxdepth 1 -type d | sed 1d'
 do
 	cd ${D}
-	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 3p)"
+	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
 	mv ${DCDIR} ../../Masterdata/${D}_1
 	cd ..
 done
@@ -205,5 +207,4 @@ done
 #####################
 echo
 echo 'Masterdata Compiled.'
-	
-		
+
