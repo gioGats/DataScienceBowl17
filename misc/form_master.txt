@@ -15,7 +15,7 @@ echo
 echo 'Untaring files...'
 echo
 echo -n 'Untaring stage1.tar.gz...'
-tar -xf stage1.gz
+tar -xf stage1.tar.gz
 echo -e 'Done!\n'
 echo -n 'Untaring lidc-idrl.tar...'
 tar -xf lidc-idrl.tar.gz
