@@ -1,11 +1,5 @@
 #!/bin/bash
 
-############
-#Sam's Form Master v2.0: The Form Master Strikes Back
-############
-
-
-
 
 echo 'Forming Master Dataset...'
 echo -n 'Current path is: '
@@ -81,13 +75,13 @@ OLDIFS=$IFS
 IFS=,
 sed 1d $INPUT | while read patient cval other  #Possible Problem Line...
 do
-	if [ $cval -eq 2 ] || [ $cval -eq 3 ] #Patient has cancer
+	if [[ $cval == 2 ]] || [[ $cval == 3 ]] #Patient has cancer
 	then
 		cd ${patient}
 		DCDIR="$(find . -maxdepth 4 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
 		mv ${DCDIR} ../../../Masterdata/${patient}_1
 		cd ..
-	elif [ $cval -eq 1 ] #Patient does not have cancer/diagnosed with unrelated disease
+	elif [[ $cval == 1 ]]#Patient does not have cancer/diagnosed with unrelated disease
 	then
 		cd ${patient}
 		DCDIR="$(find . -maxdepth 4 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
@@ -122,7 +116,7 @@ echo
 echo
 cd RIDER/DOI
 
-for D in 'find . -maxdepth 1 -type d | sed 1d'
+for D in `find . -maxdepth 1 -type d | sed 1d`
 do
 	cd ${D}
 	DCDIR="$(find . -maxdepth 3 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
@@ -196,7 +190,7 @@ echo 'Untaring TIME2.tar...'
 tar -xf TIME2.tar.gz
 echo 'Working on TIME data...'
 
-for D in 'find . -maxdepth 1 -type d | sed 1d'
+for D in `find . -maxdepth 1 -type d | sed 1d`
 do
 	cd ${D}
 	DCDIR="$(find . -maxdepth 2 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
