@@ -121,7 +121,7 @@ fromdos TestSet_NoduleData_PublicRelease_wTruth.csv
 INPUT=TestSet_NoduleData_PublicRelease_wTruth.csv
 sed -n '2,74p' $INPUT | while read patient nod pos center diag
 do
-	if [ $nod -eq 1 ]
+	if [[ $nod == 1 ]]
 	then
 		cd ${patient}
 	        DCDIR="$(find . -maxdepth 3 -type d -exec bash -c "echo -ne '{}\t'; ls '{}' | wc -l" \; |   awk -F"\t" '$NF>=20{print $1}' | sed -n 1p)"
