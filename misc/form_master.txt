@@ -25,14 +25,6 @@ tar -xf time.tar.gz
 echo "Making directory 'Masterdata'..."
 mkdir Masterdata
 echo "Moving and Renaming 'stage1' directory..."
-echo
-echo
-echo
-echo
-ls
-echo
-echo
-echo
 mv stage1_labels.csv stage1
 cd stage1
 
@@ -52,28 +44,14 @@ cd ..
 #####################
 
 echo 'Working on LUNA2016 data...'
-echo
-echo
-echo
-ls
-echo
-echo
-echo
 cd LIDC-IDRL
-echo
-echo
-echo
-ls
-echo
-echo
-echo
 mv tcia-diagnosis-data-2012-04-20.csv DOI
 cd DOI
 
 INPUT=tcia-diagnosis-data-2012-04-20.csv
 OLDIFS=$IFS
 IFS=,
-sed 1d $INPUT | while read patient cval other  #Possible Problem Line...
+sed 1d $INPUT | while read patient cval a b c d e f g h i j k  #Possible Problem Line...
 do
 	if [[ $cval == 2 ]] || [[ $cval == 3 ]] #Patient has cancer
 	then
@@ -95,25 +73,11 @@ IFS=$OLDIFS
 
 echo
 echo 'Done!'
-echo
-echo
-echo
-ls
-echo
-echo
-echo
 cd ../..
 
 #####################
 
 echo 'Starting on Rider data...'
-echo
-echo
-echo
-ls
-echo
-echo
-echo
 cd RIDER/DOI
 
 for D in `find . -maxdepth 1 -type d | sed 1d`
@@ -126,13 +90,6 @@ done
 
 echo
 echo 'Done!'
-echo
-echo
-echo
-ls
-echo
-echo
-echo
 cd ../..
 
 #####################
