@@ -77,20 +77,16 @@ def make_dataset(data_directory, preprocess_params,
     np.random.shuffle(patient_ids)
 
     subset_indicies = generate_subset_indicies(num_subsets, len(patient_ids))
-    print(subset_indicies)
     for subset in subset_indicies:
         examples_in_subset = subset[1] - subset[0] + 1
-        print('Create subset_%d_X' % subset_indicies.index(subset))
         dset_x = f.create_dataset('subset_%d_X' % subset_indicies.index(subset),
                                   ((examples_in_subset*exs_per_patient,) + get_shape(preprocess_params)),
                                   dtype=np.int16, chunks=True)
-        print('Create subset_%d_Y' % subset_indicies.index(subset))
         dset_y = f.create_dataset('subset_%d_Y' % subset_indicies.index(subset),
                                   (examples_in_subset*exs_per_patient,),
                                   dtype=np.int16, chunks=True)
         for i in range(subset[1] - subset[0] + 1):
             patient_id = patient_ids[i + subset[0]]
-            print(i, i + subset[0])
             preprocess_fn = make_preprocess_function(preprocess, preprocess_params)
             cubes, labels = preprocess_fn('%s/%s' % (data_directory, patient_id))
             for j in range(len(cubes)):

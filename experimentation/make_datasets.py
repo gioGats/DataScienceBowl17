@@ -16,7 +16,7 @@ def all_combinations(vary_dim2d=True, vary_slices=True,
     else:
         combinations = [[300]]
     if vary_slices:
-        combinations.append([-1, 20, 50, 100])
+        combinations.append([20, 50, 100])
     else:
         combinations.append([50])
     if vary_mode:
@@ -75,5 +75,5 @@ if __name__ == '__main__':
                                    vary_mode=False, vary_processing=False,
                                    vary_mirroring=False, vary_blurring=False)
 
-    Parallel(n_jobs=-1)(delayed(make_dataset_wrapper)(i) for i in params_iter)
+    Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
 
