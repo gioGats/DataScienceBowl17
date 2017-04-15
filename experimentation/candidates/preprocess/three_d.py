@@ -31,20 +31,27 @@ def three_d_preprocess(dicom_directory,
     if processing == '' or 'hu':
         # adjust pixel values  with processing function
         patient_array = get_pixels_hu(patient_array)
+    else:
+        raise NotImplementedError('%s not a valid processing mode' % processing)
 
     patient_id = dicom_directory.split('/')[-1]
     label = int(patient_id[-1])
-    # TODO Troubleshoot patient '0b20184e0cd497028bdd155d9fb42dc9'
 
     # Apply resizing
     patient_array = resize_image(patient_array, shape=(x, y, slices), mode=mode)
-    return_arrays = np.array([initial_array, label], dtype='int16')
+    return_arrays = np.array(patient_array, dtype=np.int16)
 
     if mirroring:
         return_arrays = mirror_array(return_arrays)
     if blurring:
         return_arrays = blur_array(return_arrays)
-    return return_arrays
+
+    if label == 1:
+        return return_arrays, np.ones((len(return_arrays),), dtype=np.int16)
+    elif label == 0:
+        return return_arrays, np.zeros((len(return_arrays),), dtype=np.int16)
+    else:
+        raise ValueError('%s | label not 0/1' % patient_id)
 
 
 def load_scan(path):
@@ -83,13 +90,13 @@ def get_pixels_hu(slices):
 def mirror_array(initial_array):
     return_arrays = initial_array
     for arr in return_arrays:
-        array_to_add = np.array([np.flip(arr, 1), label])
+        array_to_add = np.flip(arr, 1)
         return_arrays = np.vstack((return_arrays, array_to_add))
     for arr in return_arrays:
-        array_to_add = np.array([np.flip(arr, 2), label])
+        array_to_add = np.flip(arr, 2)
         return_arrays = np.vstack((return_arrays, array_to_add))
     for arr in return_arrays:
-        array_to_add = np.array([np.flip(arr, 0), label])
+        array_to_add = np.flip(arr, 0)
         return_arrays = np.vstack((return_arrays, array_to_add))
     return return_arrays
 
@@ -129,7 +136,7 @@ if __name__ == '__main__':
 
         def test_get_pixels_hu(self):
             patient_array = get_pixels_hu(load_scan(self.test_patient_dir))
-            self.assertEqual(patient_array.dtype, 'int16')
+            self.assertEqual(patient_array.dtype, np.int16)
             self.assertEqual(len(patient_array.shape), 3)
             self.assertEqual(patient_array.shape[0], len(os.listdir(self.test_patient_dir)))
             self.assertEqual(patient_array[0].shape, (patient_array.shape[1], patient_array.shape[2]))
