@@ -1,3 +1,5 @@
+#!/usr/bin/env Python3
+
 from .three_d import three_d_preprocess as preprocess
 import numpy as np
 import h5py
@@ -6,35 +8,39 @@ import math
 
 
 def name_dataset(preprocess_params, debug=False):
-    shape = preprocess_params['shape']
+    x = preprocess_params['x']
+    y = preprocess_params['y']
+    z = preprocess_params['z']
     mode = preprocess_params['mode']
-    processing = preprocess_params['processing']
-    mirroring = preprocess_params['mirroring']
-    blurring = preprocess_params['blurring']
+    processing = preprocess_params['process']
+    mirroring = preprocess_params['mirror']
+    blurring = preprocess_params['blur']
 
-    if shape[2] <= 0:
-        return_string = '2D_(%d,%d)_%s_%s' % (shape[0], shape[1], mode, processing)
+    if z <= 0:
+        return_string = '2D_(%d,%d)_%s_%s' % (x, y, mode, processing)
     else:
-        return_string = '3D_(%d,%d,%d)_%s_%s' % (shape[0], shape[1], shape[2], mode, processing)
+        return_string = '3D_(%d,%d,%d)_%s_%s' % (x, y, z, mode, processing)
     if mirroring:
         return_string += '-M'
     if blurring:
         return_string += '-B'
     if debug:
         return_string += '_DEBUG'
-    # TODO Fix naming setup
     return return_string + '.hdf5'
 
 
 def generate_subset_indicies(num_subsets, num_examples):
     subset_indicies = []
     for i in range(num_subsets):
-        start = math.ceil(num_examples*(i/10))
+        start = math.ceil(num_examples*(i/num_subsets))
         if num_examples % num_subsets == 0:
-            stop = int(num_examples*((i+1)/10) - 1)
+            stop = int(num_examples*((i+1)/num_subsets) - 1)
         else:
-            stop = math.floor(num_examples*((i+1)/10))
-        subset_indicies.append((start, stop))
+            stop = math.floor(num_examples*((i+1)/num_subsets))
+        if i == num_subsets - 1:
+            subset_indicies.append((start, min(num_examples-1, stop)))
+        else:
+            subset_indicies.append((start, stop))
     return subset_indicies
 
 
@@ -71,25 +77,29 @@ def make_dataset(data_directory, preprocess_params,
     np.random.shuffle(patient_ids)
 
     subset_indicies = generate_subset_indicies(num_subsets, len(patient_ids))
+    print(subset_indicies)
     for subset in subset_indicies:
         examples_in_subset = subset[1] - subset[0] + 1
+        print('Create subset_%d_X' % subset_indicies.index(subset))
         dset_x = f.create_dataset('subset_%d_X' % subset_indicies.index(subset),
-                                  (examples_in_subset*exs_per_patient, get_shape(preprocess_params)),
+                                  ((examples_in_subset*exs_per_patient,) + get_shape(preprocess_params)),
                                   dtype=np.int16, chunks=True)
-        dest_y = f.create_dataset('subset_%d_Y' % subset_indicies.index(subset),
+        print('Create subset_%d_Y' % subset_indicies.index(subset))
+        dset_y = f.create_dataset('subset_%d_Y' % subset_indicies.index(subset),
                                   (examples_in_subset*exs_per_patient,),
                                   dtype=np.int16, chunks=True)
         for i in range(subset[1] - subset[0] + 1):
             patient_id = patient_ids[i + subset[0]]
+            print(i, i + subset[0])
             preprocess_fn = make_preprocess_function(preprocess, preprocess_params)
-            cubes, labels = preprocess_fn(patient_id)
-            for j in len(values):
+            cubes, labels = preprocess_fn('%s/%s' % (data_directory, patient_id))
+            for j in range(len(cubes)):
                 dset_x[i + j*examples_in_subset] = cubes[j]
                 dset_y[i + j*examples_in_subset] = labels[j]
             if i % flush_freq == 0:
                 f.flush()
 
-    dset = f.create_dataset('patient_ids', data=patient_ids, chunks=True)
+    dset = f.create_dataset('patient_ids', data=patient_ids.astype('|S34'), dtype='S34', chunks=True)
     f.flush()
     record_metadata(f, preprocess_params)
     f.close()

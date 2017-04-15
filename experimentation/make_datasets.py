@@ -1,7 +1,6 @@
+#!/usr/bin/env Python3
+
 from candidates.preprocess.make_dataset import make_dataset
-import numpy as np
-import h5py
-import sys
 import itertools
 from joblib import Parallel, delayed
 
@@ -9,12 +8,13 @@ from joblib import Parallel, delayed
 DATA_PATH = '/storage/data'
 
 
-def all_combinations(vary_dim2d=True, vary_slices=True, vary_mode=True,
-                     vary_processing=True, vary_mirroring=True, vary_blurring=True):
+def all_combinations(vary_dim2d=True, vary_slices=True,
+                     vary_mode=True, vary_processing=True,
+                     vary_mirroring=True, vary_blurring=True):
     if vary_dim2d:
         combinations = [[100, 200, 300, 400]]
     else:
-        combinations = [300]
+        combinations = [[300]]
     if vary_slices:
         combinations.append([-1, 20, 50, 100])
     else:
@@ -61,15 +61,19 @@ def exs_per_patient(full_tuple):
     return total
 
 
-def make_dataset_wrapper(full_tuple):
+def make_dataset_wrapper(full_tuple, num_subsets=10, flush_freq=100):
     make_dataset(data_directory=DATA_PATH,
                  preprocess_params=make_param_dict(full_tuple),
                  exs_per_patient=exs_per_patient(full_tuple),
+                 num_subsets=num_subsets,
+                 flush_freq=flush_freq,
                  debug=True)
 
 
 if __name__ == '__main__':
-    params_iter = all_combinations(vary_mode=False, vary_processing=False,
+    params_iter = all_combinations(vary_dim2d=True, vary_slices=True,
+                                   vary_mode=False, vary_processing=False,
                                    vary_mirroring=False, vary_blurring=False)
+
     Parallel(n_jobs=-1)(delayed(make_dataset_wrapper)(i) for i in params_iter)
 

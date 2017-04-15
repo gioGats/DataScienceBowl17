@@ -1,3 +1,5 @@
+#!/usr/bin/env Python3
+
 import numpy as np
 import pandas as pd
 import dicom
@@ -39,7 +41,7 @@ def three_d_preprocess(dicom_directory,
 
     # Apply resizing
     patient_array = resize_image(patient_array, shape=(x, y, slices), mode=mode)
-    return_arrays = np.array(patient_array, dtype=np.int16)
+    return_arrays = np.array([patient_array], dtype=np.int16)
 
     if mirroring:
         return_arrays = mirror_array(return_arrays)
@@ -110,7 +112,7 @@ def resize_image(patient_array, shape, mode):
     if shape[2] <= 0:
         shape = (shape[0], shape[1], len(patient_array))
     patient_array = resize(patient_array, shape, mode=mode)
-    patient_array = np.swapaxes(patient_array, 0, 2)
+    #patient_array = np.swapaxes(patient_array, 0, 2)
     return patient_array
 
 if __name__ == '__main__':

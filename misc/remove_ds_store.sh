@@ -4,5 +4,4 @@
 # preferences of the user.  It's a hidden file, so whatever.  Except it throws off a lot of file operations
 # in this project.  Simply run this script to remove all the .DS_Store files in the data directory.
 
-cd /nvme
-find . -name '.DS_Store' -type f -delete
+find /storage -name '.DS_Store' -type f -delete
