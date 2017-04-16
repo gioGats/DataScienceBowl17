@@ -10,7 +10,7 @@ def inception_v4_2d(input_tensor, output_dimension=1, recurrent_layer='rnn', rec
     :param recurrent_params: dict of parameters for recurrent layer; see rnn directory for detail
     :return: An instance of tflearn.DNN class supporting {fit, predict, evaluate, save, load} methods
     """
-    # SPRINT3 Implement tflearn wrapper around raw tensorflow
+    # FUTURE Implement tflearn wrapper around raw tensorflow
     raise NotImplementedError
 
 
@@ -21,5 +21,5 @@ def inception_v4_3d(input_tensor, output_dimension=1):
     :param output_dimension: Dimensions of output
     :return: An instance of tflearn.DNN class supporting {fit, predict, evaluate, save, load} methods
     """
-    # SPRINT3 Implement tflearn wrapper around raw tensorflow
+    # FUTURE Implement tflearn wrapper around raw tensorflow
     raise NotImplementedError

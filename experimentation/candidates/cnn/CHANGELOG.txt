@@ -32,7 +32,8 @@ Inception v3
 ===============================================================================
 Inception v4
 ===============================================================================
-
+- No TFLearn implementation as of 16 APR 17.  Consider adding a tflearn wrapper
+    around the raw tensorflow if time remains.
 
 ===============================================================================
 Network-in-Network
