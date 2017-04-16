@@ -4,7 +4,7 @@ import tflearn
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.conv import conv_3d, max_pool_3d
-from tflearn.layers.normalization import local_response_normalization
+from tflearn.layers.normalization import local_response_normalization, batch_normalization
 from tflearn.layers.estimator import regression
 
 
@@ -69,18 +69,19 @@ def alexnet_model_3d(input_tensor, output_dimension=1):
     :param output_dimension: Dimensions of output
     :return: An instance of tflearn.DNN class supporting {fit, predict, evaluate, save, load} methods
     """
+
     network = input_data(shape=input_tensor)
     network = conv_3d(network, 96, 11, strides=4, activation='relu')
     network = max_pool_3d(network, 3, strides=2)
-    network = local_response_normalization(network)
+    network = batch_normalization(network)
     network = conv_3d(network, 256, 5, activation='relu')
     network = max_pool_3d(network, 3, strides=2)
-    network = local_response_normalization(network)
+    network = batch_normalization(network)
     network = conv_3d(network, 384, 3, activation='relu')
     network = conv_3d(network, 384, 3, activation='relu')
     network = conv_3d(network, 256, 3, activation='relu')
     network = max_pool_3d(network, 3, strides=2)
-    network = local_response_normalization(network)
+    network = batch_normalization(network)
     network = fully_connected(network, 4096, activation='tanh')
     network = dropout(network, 0.5)
     network = fully_connected(network, 4096, activation='tanh')

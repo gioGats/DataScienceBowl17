@@ -43,12 +43,10 @@ if __name__ == '__main__':
                 clf = model_generator(input_tensor, output_shape)
                 assert(isinstance(clf, tflearn.DNN))
                 raise RuntimeError  # FUTURE Remove and test full functionality (probably need GPU)
-                """
-                for subset in train_subsets:
-                    clf.fit(subset[0], subset[1], n_epoch=1, validation_set=(X_validation, Y_validation))
+                # for subset in train_subsets:
+                #    clf.fit(subset[0], subset[1], n_epoch=1, validation_set=(X_validation, Y_validation))
 
-                print(clf.predict(X_test))
-                """
+                # print(clf.predict(X_test))
             except NotImplementedError:
                 print("%s not implemented" % str(clf))
             except RuntimeError:  # FUTURE Remove and test full functionality (probably need GPU)
