@@ -2,6 +2,7 @@
 
 from candidates.preprocess.make_dataset import make_dataset
 import itertools
+import sys
 from joblib import Parallel, delayed
 
 #  Note: GDrive upload size limit is 5.2TB
@@ -71,9 +72,13 @@ def make_dataset_wrapper(full_tuple, num_subsets=10, flush_freq=100):
 
 
 if __name__ == '__main__':
-    params_iter = all_combinations(vary_dim2d=True, vary_slices=True,
-                                   vary_mode=False, vary_processing=False,
-                                   vary_mirroring=False, vary_blurring=False)
+    if '-debug' in sys.argv:
+        params_iter = all_combinations(vary_dim2d=True, vary_slices=True,
+                                       vary_mode=False, vary_processing=False,
+                                       vary_mirroring=False, vary_blurring=False)
 
-    Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
-
+        Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
+    elif '-all' in sys.argv:
+        raise NotImplementedError
+    else:
+        print('USAGE STATEMENT')
