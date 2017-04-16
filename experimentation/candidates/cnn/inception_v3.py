@@ -182,13 +182,19 @@ def inception_v3_3d(input_tensor, output_dimension=1):
     :param output_dimension: Dimensions of output
     :return: An instance of tflearn.DNN class supporting {fit, predict, evaluate, save, load} methods
     """
+    from tflearn.layers.conv import conv_3d, max_pool_3d, avg_pool_3d
+    from tflearn.layers.core import input_data, dropout, fully_connected
+    from tflearn.layers.merge_ops import merge
+    from tflearn.layers.normalization import batch_normalization
+    from tflearn.layers.estimator import regression
+
     network = input_data(shape=input_tensor)
     conv1_7_7 = conv_3d(network, 64, 7, strides=2, activation='relu', name='conv1_7_7_s2')
     pool1_3_3 = max_pool_3d(conv1_7_7, 3, strides=2)
-    pool1_3_3 = local_response_normalization(pool1_3_3)
+    pool1_3_3 = batch_normalization(pool1_3_3)
     conv2_3_3_reduce = conv_3d(pool1_3_3, 64, 1, activation='relu', name='conv2_3_3_reduce')
     conv2_3_3 = conv_3d(conv2_3_3_reduce, 192, 3, activation='relu', name='conv2_3_3')
-    conv2_3_3 = local_response_normalization(conv2_3_3)
+    conv2_3_3 = batch_normalization(conv2_3_3)
     pool2_3_3 = max_pool_3d(conv2_3_3, kernel_size=3, strides=2, name='pool2_3_3_s2')
     inception_3a_1_1 = conv_3d(pool2_3_3, 64, 1, activation='relu', name='inception_3a_1_1')
     inception_3a_3_3_reduce = conv_3d(pool2_3_3, 96, 1, activation='relu', name='inception_3a_3_3_reduce')
@@ -202,6 +208,7 @@ def inception_v3_3d(input_tensor, output_dimension=1):
     # merge the inception_3a__
     inception_3a_output = merge([inception_3a_1_1, inception_3a_3_3, inception_3a_5_5, inception_3a_pool_1_1],
                                 mode='concat', axis=3)
+    # TODO Roadblock in merge operation; see incep_ValueError.txt
 
     inception_3b_1_1 = conv_3d(inception_3a_output, 128, filter_size=1, activation='relu', name='inception_3b_1_1')
     inception_3b_3_3_reduce = conv_3d(inception_3a_output, 128, filter_size=1, activation='relu',

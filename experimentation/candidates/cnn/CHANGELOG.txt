@@ -1,0 +1,51 @@
+Modifications to 2D CNN implementations for 3D inputs.
+
+
+===============================================================================
+General
+===============================================================================
+- All conv_2d, max_pool_2d functions changed to conv_3d, max_pool_3d
+
+===============================================================================
+Alexnet
+===============================================================================
+- Change local_response_normalization to batch_normalization
+    LRN accepts only 4D tensors (2D images); BN accepts nD tensors
+    http://arxiv.org/pdf/1502.03167v3.pdf
+
+===============================================================================
+Highway Convolutional
+===============================================================================
+- Removed from consideration; uses highway_conv_2d function which does not have
+    a 3D implementation.
+
+===============================================================================
+Inception Resnet v2
+===============================================================================
+- conv_3d(activation=None) throws error;
+    replaced all with conv_3d(activation='linear'), should be same result.
+- Hit roadblock at a Negative Dimension Error coming from tensorflow internal.
+    Traceback saved.
+
+===============================================================================
+Inception v3
+===============================================================================
+- 3D specific import statements
+- Change local_response_normalization to batch_normalization
+    LRN accepts only 4D tensors (2D images); BN accepts nD tensors
+    http://arxiv.org/pdf/1502.03167v3.pdf
+- Hit roadblock at a Tensor Dimension Error coming from tensorflow internal.
+    Traceback saved.
+
+===============================================================================
+Inception v4
+===============================================================================
+- No TFLearn implementation as of 16 APR 17.  Consider adding a tflearn wrapper
+    around the raw tensorflow if time remains.
+- See: https://github.com/tflearn/tflearn/blob/master/examples/extending_tensorflow/trainer.py
+
+===============================================================================
+Network-in-Network
+===============================================================================
+- Final layer pooling (avg_pool_3D) added parameter strides=[1,1,1,1,1].  Bug
+    within TFLearn code... master doesn't match docs.  Github issue opened.

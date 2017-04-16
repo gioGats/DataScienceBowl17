@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/common_shapes.py", line 670, in _call_cpp_shape_fn_impl
+    status)
+  File "/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/contextlib.py", line 89, in __exit__
+    next(self.gen)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/errors_impl.py", line 469, in raise_exception_on_not_ok_status
+    pywrap_tensorflow.TF_GetCode(status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Negative dimension size caused by subtracting 3 from 1 for 'MaxPool_5a_3x3/MaxPool3D' (op: 'MaxPool3D') with input shapes: [?,21,21,1,192].
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "test_3d_cnn.py", line 39, in <module>
+    clf = model_generator(input_tensor, output_shape)
+  File "/storage/nstc/DataScienceBowl17/experimentation/candidates/cnn/inception_resnet_v2.py", line 264, in inception_resnet_v2_3d
+    maxpool5a_3_3 = max_pool_3d(conv4a_3_3, 3, strides=2, padding='VALID', name='MaxPool_5a_3x3')
+  File "/usr/local/lib/python3.6/site-packages/tflearn/layers/conv.py", line 959, in max_pool_3d
+    inference = tf.nn.max_pool3d(incoming, kernel, strides, padding)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/ops/gen_nn_ops.py", line 1625, in max_pool3d
+    strides=strides, padding=padding, name=name)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/op_def_library.py", line 763, in apply_op
+    op_def=op_def)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 2397, in create_op
+    set_shapes_for_outputs(ret)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 1757, in set_shapes_for_outputs
+    shapes = shape_func(op)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 1707, in call_with_requiring
+    return call_cpp_shape_fn(op, require_shape_fn=True)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/common_shapes.py", line 610, in call_cpp_shape_fn
+    debug_python_shape_fn, require_shape_fn)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/common_shapes.py", line 675, in _call_cpp_shape_fn_impl
+    raise ValueError(err.message)
+ValueError: Negative dimension size caused by subtracting 3 from 1 for 'MaxPool_5a_3x3/MaxPool3D' (op: 'MaxPool3D') with input shapes: [?,21,21,1,192].

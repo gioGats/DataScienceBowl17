@@ -1,0 +1,35 @@
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/common_shapes.py", line 670, in _call_cpp_shape_fn_impl
+    status)
+  File "/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/contextlib.py", line 89, in __exit__
+    next(self.gen)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/errors_impl.py", line 469, in raise_exception_on_not_ok_status
+    pywrap_tensorflow.TF_GetCode(status))
+tensorflow.python.framework.errors_impl.InvalidArgumentError: Dimension 3 in both shapes must be equal, but are 128 and 32 for 'Merge/concat' (op: 'ConcatV2') with input shapes: [?,13,13,3,64], [?,13,13,3,128], [?,13,13,3,32], [?,13,13,3,32], [].
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "test_3d_cnn.py", line 39, in <module>
+    clf = model_generator(input_tensor, output_shape)
+  File "/storage/nstc/DataScienceBowl17/experimentation/candidates/cnn/inception_v3.py", line 209, in inception_v3_3d
+    mode='concat', axis=0)
+  File "/usr/local/lib/python3.6/site-packages/tflearn/layers/merge_ops.py", line 45, in merge
+    inference = tf.concat(tensors, axis)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/ops/array_ops.py", line 1052, in concat
+    name=name)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/ops/gen_array_ops.py", line 519, in _concat_v2
+    name=name)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/op_def_library.py", line 763, in apply_op
+    op_def=op_def)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 2397, in create_op
+    set_shapes_for_outputs(ret)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 1757, in set_shapes_for_outputs
+    shapes = shape_func(op)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/ops.py", line 1707, in call_with_requiring
+    return call_cpp_shape_fn(op, require_shape_fn=True)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/common_shapes.py", line 610, in call_cpp_shape_fn
+    debug_python_shape_fn, require_shape_fn)
+  File "/usr/local/lib/python3.6/site-packages/tensorflow/python/framework/common_shapes.py", line 675, in _call_cpp_shape_fn_impl
+    raise ValueError(err.message)
+ValueError: Dimension 3 in both shapes must be equal, but are 128 and 32 for 'Merge/concat' (op: 'ConcatV2') with input shapes: [?,13,13,3,64], [?,13,13,3,128], [?,13,13,3,32], [?,13,13,3,32], [].

@@ -55,6 +55,8 @@ def highway_model_3d(input_tensor, output_dimension=1):
     :param output_dimension: Dimensions of output
     :return: An instance of tflearn.DNN class supporting {fit, predict, evaluate, save, load} methods
     """
+
+    """
     network = input_data(shape=input_tensor, name='input')
     #highway convolutions with pooling and dropout
     for i in range(3):
@@ -71,3 +73,6 @@ def highway_model_3d(input_tensor, output_dimension=1):
 
     # Training
     return tflearn.DNN(network, tensorboard_verbose=0)
+    """
+
+    raise NotImplementedError

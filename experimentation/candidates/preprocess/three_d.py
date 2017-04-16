@@ -1,22 +1,15 @@
+#!/usr/bin/env Python3
+
 import numpy as np
 import pandas as pd
 import dicom
 from skimage.transform import resize
 import os
 
-"""
-=================================================================================
-For this branch (modular_preprocess), I have arbitrarily selected skimage as the
-image preprocessing library.  It has unbelievably worse time performance compared
-to openCV (11s vs 770s).  But it has much superior documentation and supports 3D
-resizing natively.  We should strongly consider an openCV model to speed this up.
-=================================================================================
-"""
-
 
 def three_d_preprocess(dicom_directory,
                        x=512, y=512, slices=100,
-                       mode=None, processing='', mirroring_axes=None):
+                       mode=None, processing='', mirroring=False, blurring=False):
     """
     Processes a directory of dicom files into a numpy array. (3D)
     :param dicom_directory: path to directory with dicom files
@@ -37,52 +30,30 @@ def three_d_preprocess(dicom_directory,
     # Bring all dicoms in dicom_directory into memory
     patient_array = load_scan(dicom_directory)
 
-    # SPRINT3 Use str param for processing to specify more processing functions
-    # Look to kaggle tutorials for inspiration
-
     if processing == '' or 'hu':
         # adjust pixel values  with processing function
         patient_array = get_pixels_hu(patient_array)
+    else:
+        raise NotImplementedError('%s not a valid processing mode' % processing)
 
     patient_id = dicom_directory.split('/')[-1]
-    label = get_label(patient_id)
+    label = int(patient_id[-1])
 
-    # SPRINT3 Speed up the resizing/mirroring code (multi-thread or gpu)
-    # Look into opencv/other libraries
+    # Apply resizing
+    patient_array = resize_image(patient_array, shape=(x, y, slices), mode=mode)
+    return_arrays = np.array([patient_array], dtype=np.int16)
 
-    # Apply 2D resizing
-    if slices <= 0:
-        patient_array = resize(patient_array, (x, y, len(patient_array)), mode=mode)
-        patient_array = np.swapaxes(patient_array, 0, 2)  # SPRINT2 Visually verify this operation
-    # Apply 3D resizing
+    if mirroring:
+        return_arrays = mirror_array(return_arrays)
+    if blurring:
+        return_arrays = blur_array(return_arrays)
+
+    if label == 1:
+        return return_arrays, np.ones((len(return_arrays),), dtype=np.int16)
+    elif label == 0:
+        return return_arrays, np.zeros((len(return_arrays),), dtype=np.int16)
     else:
-        patient_array = resize(patient_array, (x, y, slices), mode=mode)
-        patient_array = np.swapaxes(patient_array, 0, 2)  # SPRINT2 Visually verify this operation
-
-    # Apply mirroring
-    return_arrays = np.array([patient_array, label])
-    if mirroring_axes is not None:
-        if 'lr' in mirroring_axes:  # mirror x axis
-            array_to_add = np.array([np.flip(patient_array, 1), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
-        if 'ud' in mirroring_axes:  # mirror y axis
-            array_to_add = np.array([np.flip(patient_array, 2), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
-        if 'fb' in mirroring_axes and slices >= 0:  # mirror z axis
-            array_to_add = np.array([np.flip(patient_array, 0), label])
-            return_arrays = np.vstack((return_arrays, array_to_add))
-    # SPRINT2 Add blurring
-    return return_arrays
-
-
-def get_label(patient_id, data_dir='/nvme/stage1_data/'):
-    # FUTURE May want to abstract this to a higher level;
-    # passing a labels file as input, instead of loading the labels file for every patient.
-    labels_df = pd.read_csv(data_dir + 'stage1_labels.csv', index_col=0)
-    label = labels_df.get_value(patient_id, 'cancer')
-    # SPRINT3 Troubleshoot patient '0b20184e0cd497028bdd155d9fb42dc9'
-    # Currently removed from sample images dataset because it doesn't have a label in stage1_labels.csv
-    return int(label)
+        raise ValueError('%s | label not 0/1' % patient_id)
 
 
 def load_scan(path):
@@ -118,6 +89,32 @@ def get_pixels_hu(slices):
     return np.array(image, dtype=np.int16)
 
 
+def mirror_array(initial_array):
+    return_arrays = initial_array
+    for arr in return_arrays:
+        array_to_add = np.flip(arr, 1)
+        return_arrays = np.vstack((return_arrays, array_to_add))
+    for arr in return_arrays:
+        array_to_add = np.flip(arr, 2)
+        return_arrays = np.vstack((return_arrays, array_to_add))
+    for arr in return_arrays:
+        array_to_add = np.flip(arr, 0)
+        return_arrays = np.vstack((return_arrays, array_to_add))
+    return return_arrays
+
+
+def blur_array(initial_arrays):
+    # TODO Blurring
+    return initial_arrays
+
+
+def resize_image(patient_array, shape, mode):
+    if shape[2] <= 0:
+        shape = (shape[0], shape[1], len(patient_array))
+    patient_array = resize(patient_array, shape, mode=mode)
+    #patient_array = np.swapaxes(patient_array, 0, 2)
+    return patient_array
+
 if __name__ == '__main__':
     import unittest
 
@@ -125,7 +122,7 @@ if __name__ == '__main__':
     class TestThreeDPreprocess(unittest.TestCase):
         def setUp(self):
             self.params_3d = {'x': 100, 'y': 100, 'slices': 50, 'mode': None,
-                              'processing': '', 'mirroring_axes': None}
+                              'processing': '', 'mirroring': False, 'blurring': False}
             self.test_patient_dir = '/nvme/stage1_data/sample_images/0a0c32c9e08cc2ea76a71649de56be6d'
 
         def test_get_label(self):
@@ -136,29 +133,32 @@ if __name__ == '__main__':
             self.assertEqual(get_label('0a38e7597ca26f9374f8ea2770ba870d'), 0)
 
         def test_load_scan(self):
-            # SPRINT3 unit test load_scan
+            # FUTURE unit test load_scan
             pass
 
         def test_get_pixels_hu(self):
             patient_array = get_pixels_hu(load_scan(self.test_patient_dir))
-            self.assertEqual(patient_array.dtype, 'int16')
+            self.assertEqual(patient_array.dtype, np.int16)
             self.assertEqual(len(patient_array.shape), 3)
             self.assertEqual(patient_array.shape[0], len(os.listdir(self.test_patient_dir)))
             self.assertEqual(patient_array[0].shape, (patient_array.shape[1], patient_array.shape[2]))
             self.assertIsInstance(patient_array[0][0][0], np.int16)
 
-            # SPRINT3 unit test get_pixels_hu in more depth
+            # FUTURE unit test get_pixels_hu in more depth
 
-        def test_mirroring(self):
-            # SPRINT2 visually test mirroring
-            pass
+        def test_mirror_array(self):
+            self.fail('Not implemented')
+
+        def test_blur_array(self):
+            self.fail('Not implemented')
 
         def test_three_d_preprocess(self):
             v = three_d_preprocess(self.test_patient_dir, x=self.params_3d['x'], y=self.params_3d['y'],
                                    slices=self.params_3d['slices'], mode=self.params_3d['mode'],
                                    processing=self.params_3d['processing'],
-                                   mirroring_axes=self.params_3d['mirroring_axes'])
-            assert(self.params_3d['mirroring_axes'] is None)  # Not written to check mirroring code yet
+                                   mirroring=self.params_3d['mirroring'], blurring=self.params_3d['blurring'])
+            assert(self.params_3d['mirroring'] is None)  # Not written to check mirroring code yet
+            assert(self.params_3d['blurring'] is None)  # Not written to check blurring code yet
             self.assertEqual(v.shape, (2,))
             self.assertIsInstance(v[1], int)
             self.assertEqual(v[0].shape, (self.params_3d['slices'],
