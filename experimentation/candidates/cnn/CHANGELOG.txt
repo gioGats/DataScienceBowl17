@@ -22,6 +22,8 @@ Highway Convolutional
 ===============================================================================
 Inception Resnet v2
 ===============================================================================
+- conv_3d(activation=None) throws error;
+    replaced all with conv_3d(activation='linear'), should be same result.
 
 
 ===============================================================================
@@ -35,6 +37,8 @@ Inception v4
 - No TFLearn implementation as of 16 APR 17.  Consider adding a tflearn wrapper
     around the raw tensorflow if time remains.
 - See: https://github.com/tflearn/tflearn/blob/master/examples/extending_tensorflow/trainer.py
+- Hit roadblock at a Negative Dimension Error coming from tensorflow internal.
+    Traceback saved.
 
 ===============================================================================
 Network-in-Network
