@@ -1,14 +1,10 @@
 from alexnet import alexnet_model_3d
-from highway_conv import highway_model_3d
 from inception_resnet_v2 import inception_resnet_v2_3d
 from inception_v3 import inception_v3_3d
-from inception_v4 import inception_v4_3d
 from net_in_net import network_in_network_3d
 
 import tflearn
 import h5py
-import numpy as np
-import pickle
 import traceback
 import sys
 
@@ -36,8 +32,8 @@ if __name__ == '__main__':
 
         print(input_tensor, output_shape)
 
-        for model_generator in [alexnet_model_3d, highway_model_3d, inception_resnet_v2_3d,
-                                inception_v3_3d, inception_v4_3d, network_in_network_3d]:
+        for model_generator in [alexnet_model_3d, network_in_network_3d,
+                                inception_resnet_v2_3d, inception_v3_3d]:
             print(model_generator.__name__)
             try:
                 clf = model_generator(input_tensor, output_shape)

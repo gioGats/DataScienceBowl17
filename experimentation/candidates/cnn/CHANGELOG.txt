@@ -34,8 +34,10 @@ Inception v4
 ===============================================================================
 - No TFLearn implementation as of 16 APR 17.  Consider adding a tflearn wrapper
     around the raw tensorflow if time remains.
+- See: https://github.com/tflearn/tflearn/blob/master/examples/extending_tensorflow/trainer.py
 
 ===============================================================================
 Network-in-Network
 ===============================================================================
-
+- Final layer pooling (avg_pool_3D) added parameter strides=[1,1,1,1,1].  Bug
+    within TFLearn code... master doesn't match docs.  Github issue opened.

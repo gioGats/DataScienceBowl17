@@ -48,6 +48,8 @@ def network_in_network_3d(input_tensor, output_dimension=1):
     :return: An instance of tflearn.DNN class supporting {fit, predict, evaluate, save, load} methods
     """
     from tflearn.layers.conv import conv_3d, max_pool_3d, avg_pool_3d
+    from tflearn.layers.core import input_data, dropout, flatten
+    from tflearn.layers.estimator import regression
 
     network = input_data(shape=input_tensor)
     network = conv_3d(network, 192, 5, activation='relu')
@@ -66,7 +68,7 @@ def network_in_network_3d(input_tensor, output_dimension=1):
     # Last layer
     network = conv_3d(network, output_dimension, 1, activation='relu')
 
-    network = avg_pool_3d(network, 8)
+    network = avg_pool_3d(network, 8, strides=[1,1,1,1,1])
     network = flatten(network)
     network = regression(network, optimizer='adam',
                          loss='softmax_categorical_crossentropy',
