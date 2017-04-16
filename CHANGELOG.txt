@@ -1,0 +1,53 @@
+CHANGELOG
+*All file paths relative to /storage/DataScienceBowl17
+    (project top-level directory)
+
+=======================================================
+COMPLETE
+=======================================================
+
+FILES: /deployment_file_structure
+MOD: Adapted for fireball.cs.uni.edu filesystem,
+    scripted download/structuring/preprocessing,
+    and competition submission;
+
+FILES: /DSB17/misc
+MOD: Deprecated and NotImplemented warnings
+
+FILES: CLI.py -> nstc
+MOD: Updated for Linux CLI functionality
+
+FILES: tbd
+MOD: Finished HDF5 implementation for dataset creation
+
+FILES: /DSB17/exp/cand/probability
+MOD: Removed probability from model, left to CNN layers
+
+FILES: /DSB17/exp/cand/cnn
+MOD: Ignore 2D variants - 2D will use pre-trained CNNs
+    in /DSB17/exp/cand/rnn; still needs tweaking/testing
+    of 3D models.
+
+FILES: /DSB17/exp/cand/rnn
+MOD: Still needs addition of pre-trained CNN models and
+    transfer learning code functionality
+
+FILES: /DSB17/exp/cand/preprocess
+MOD: TODO lists created for three_d.py, make_dataset.py;
+    deprecated two_d.py; Reject additional pre-processing
+    functions for now; get_label() replaced with directory
+    naming
+
+FILES: /DSB17/exp
+MOD: Added make_2d_clf.py and make_3d_clf.py interfaces
+    for building tflearn clf objects with desired params;
+    HDF5 implementation for make_datasets.py; TODO list
+    for make_datasets.py.
+
+=======================================================
+REMAINING
+=======================================================
+FILES: /DSB17/exp/cand/preprocess/make_dataset.py
+TODO: Record metadata
+    -Preprocess function lambda
+    -Port unit testing from old file

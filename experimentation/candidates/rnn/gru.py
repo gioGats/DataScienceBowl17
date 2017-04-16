@@ -18,7 +18,6 @@ def gru_layer(network, param_dict=None):
             'restore': True,
             'reuse': False,
             'scope': None
-
         }
     return tflearn.lstm(network,
                         n_units=param_dict['n_units'],

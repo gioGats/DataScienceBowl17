@@ -6,6 +6,9 @@
 # Will manually download and aggregate data onto fireball.cs.uni.edu;
 # Sprint3 This script will provide mirroring between servers
 
+
+echo "Not implemented pending large file hosting"
+
 # Additional Data Sources
 
 # Lung TIME annotated scans

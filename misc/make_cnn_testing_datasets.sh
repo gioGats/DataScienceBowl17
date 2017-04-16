@@ -2,6 +2,8 @@
 
 # Makes datasets of sample data for testing gpu memory growth of cnn networks.
 
+echo "DEPRECATION WARNING: This file not updated for 2APR refactor"
+
 cd /nvme/DataScienceBowl17/experimentation
 echo '500 250'
 python3 make_datasets.py 500 250 /raid/dsb_data

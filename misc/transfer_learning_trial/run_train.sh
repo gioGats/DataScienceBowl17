@@ -8,6 +8,8 @@
 # https://research.googleblog.com/2016/03/train-your-own-image-classifier-with.html
 # https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/image_retraining/retrain.py
 
+echo "DEPRECATION WARNING: This file not updated for 2APR refactor"
+
 cd ~/tensorflow
 
 python3 tensorflow/examples/image_retraining/retrain.py \

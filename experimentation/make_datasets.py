@@ -1,32 +1,79 @@
+#!/usr/bin/env Python3
+
 from candidates.preprocess.make_dataset import make_dataset
-import numpy as np
-import h5py
-import sys
+import itertools
+from joblib import Parallel, delayed
 
-# FUTURE Note: GDrive upload size limit is 5.2TB
+#  Note: GDrive upload size limit is 5.2TB
+DATA_PATH = '/storage/data'
 
-stage1_data = '/nvme/stage1_data/stage1'
-stage1_sample = '/nvme/stage1_data/sample_images'
+
+def all_combinations(vary_dim2d=True, vary_slices=True,
+                     vary_mode=True, vary_processing=True,
+                     vary_mirroring=True, vary_blurring=True):
+    if vary_dim2d:
+        combinations = [[100, 200, 300, 400]]
+    else:
+        combinations = [[300]]
+    if vary_slices:
+        combinations.append([20, 50, 100])
+    else:
+        combinations.append([50])
+    if vary_mode:
+        combinations.append(['constant', 'edge', 'symmetric', 'reflect', 'wrap'])
+    else:
+        combinations.append(['constant'])
+    if vary_processing:
+        combinations.append(['hu'])
+    else:
+        combinations.append(['hu'])
+    if vary_mirroring:
+        combinations.append([True, False])
+    else:
+        combinations.append([False])
+    if vary_blurring:
+        combinations.append([True, False])
+    else:
+        combinations.append([False])
+    return itertools.product(*combinations)
+
+
+def make_param_dict(full_tuple):
+    return {'x': full_tuple[0],
+            'y': full_tuple[0],
+            'z': full_tuple[1],
+            'mode': full_tuple[2],
+            'process': full_tuple[3],
+            'mirror': full_tuple[4],
+            'blur': full_tuple[5]}
+
+
+def exs_per_patient(full_tuple):
+    # HARDCODED PARAMS
+    mirror_multiple = 8
+    blur_multiple = 2
+
+    total = 1
+    if full_tuple[4]:
+        total *= mirror_multiple
+    if full_tuple[5]:
+        total += blur_multiple
+    return total
+
+
+def make_dataset_wrapper(full_tuple, num_subsets=10, flush_freq=100):
+    make_dataset(data_directory=DATA_PATH,
+                 preprocess_params=make_param_dict(full_tuple),
+                 exs_per_patient=exs_per_patient(full_tuple),
+                 num_subsets=num_subsets,
+                 flush_freq=flush_freq,
+                 debug=True)
+
 
 if __name__ == '__main__':
-    if len(sys.argv) > 2:
-        dim_2d = int(sys.argv[1])
-        slices = int(sys.argv[2])
-        # Additional params commented out for initial dataset creation
-        # mode = sys.argv[4]
-        # mirroring = sys.argv[5]
-        # dest = sys.argv[6]
-        dest = sys.argv[3]
-        make_dataset(stage1_sample, x=dim_2d, y=dim_2d, slices=slices,
-                     chunk_size=-1, dest=dest)
+    params_iter = all_combinations(vary_dim2d=True, vary_slices=True,
+                                   vary_mode=False, vary_processing=False,
+                                   vary_mirroring=False, vary_blurring=False)
 
-    if sys.argv[1] == '--loop':
+    Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
 
-        datasets_to_create = []
-        for dim_2d in [100, 200, 300, 400]:
-            for slices in [-1, 20, 50, 100]:
-                for mode in ['constant', 'edge', 'symmetric', 'reflect', 'wrap']:
-                    for mirroring in [None, ['lr', 'ud', 'fb']]:
-                        make_dataset(stage1_sample, x=dim_2d, y=dim_2d,
-                                     slices=slices, mode=mode, mirroring_axes=mirroring, chunk_size=-1)
-                        # TODO start ds upload to GDrive
