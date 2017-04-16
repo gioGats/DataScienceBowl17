@@ -15,11 +15,11 @@ def all_combinations(vary_dim2d=True, vary_slices=True,
     if vary_dim2d:
         combinations = [[100, 200, 300, 400]]
     else:
-        combinations = [[300]]
+        combinations = [[100]]
     if vary_slices:
         combinations.append([20, 50, 100])
     else:
-        combinations.append([50])
+        combinations.append([20])
     if vary_mode:
         combinations.append(['constant', 'edge', 'symmetric', 'reflect', 'wrap'])
     else:
@@ -73,12 +73,22 @@ def make_dataset_wrapper(full_tuple, num_subsets=10, flush_freq=100):
 
 if __name__ == '__main__':
     if '-debug' in sys.argv:
+        params_iter = all_combinations(vary_dim2d=False, vary_slices=False,
+                                       vary_mode=False, vary_processing=False,
+                                       vary_mirroring=False, vary_blurring=False)
+
+        Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
+    elif '-size' in sys.argv:
         params_iter = all_combinations(vary_dim2d=True, vary_slices=True,
                                        vary_mode=False, vary_processing=False,
                                        vary_mirroring=False, vary_blurring=False)
 
         Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
     elif '-all' in sys.argv:
-        raise NotImplementedError
+        params_iter = all_combinations(vary_dim2d=True, vary_slices=True,
+                                       vary_mode=True, vary_processing=True,
+                                       vary_mirroring=True, vary_blurring=True)
+
+        Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
     else:
         print('USAGE STATEMENT')

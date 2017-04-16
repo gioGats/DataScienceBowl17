@@ -80,7 +80,7 @@ def make_dataset(data_directory, preprocess_params,
     for subset in subset_indicies:
         examples_in_subset = subset[1] - subset[0] + 1
         dset_x = f.create_dataset('subset_%d_X' % subset_indicies.index(subset),
-                                  ((examples_in_subset*exs_per_patient,) + get_shape(preprocess_params)),
+                                  ((examples_in_subset*exs_per_patient,) + get_shape(preprocess_params) + (1,)),
                                   dtype=np.int16, chunks=True)
         dset_y = f.create_dataset('subset_%d_Y' % subset_indicies.index(subset),
                                   (examples_in_subset*exs_per_patient,),
@@ -90,7 +90,7 @@ def make_dataset(data_directory, preprocess_params,
             preprocess_fn = make_preprocess_function(preprocess, preprocess_params)
             cubes, labels = preprocess_fn('%s/%s' % (data_directory, patient_id))
             for j in range(len(cubes)):
-                dset_x[i + j*examples_in_subset] = cubes[j]
+                dset_x[i + j*examples_in_subset] = cubes[j].reshape(cubes[j].shape + (1,))
                 dset_y[i + j*examples_in_subset] = labels[j]
             if i % flush_freq == 0:
                 f.flush()
