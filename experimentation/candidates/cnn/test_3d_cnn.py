@@ -32,8 +32,8 @@ if __name__ == '__main__':
 
         print(input_tensor, output_shape)
 
-        for model_generator in [alexnet_model_3d, network_in_network_3d,
-                                inception_resnet_v2_3d, inception_v3_3d]:
+        for model_generator in [inception_v3_3d, alexnet_model_3d, network_in_network_3d,
+                                inception_resnet_v2_3d]:
             print(model_generator.__name__)
             try:
                 clf = model_generator(input_tensor, output_shape)
