@@ -11,17 +11,6 @@ import os
 def three_d_preprocess(dicom_directory,
                        x=512, y=512, slices=100,
                        mode=None, processing='', mirroring=False, blurring=False):
-    """
-    Processes a directory of dicom files into a numpy array. (3D)
-    :param dicom_directory: path to directory with dicom files
-    :param x: x dimension of output
-    :param y: y dimension of output
-    :param slices: number of slices in output
-    :param mode: None or one of 'constant', 'edge', 'symmetric', 'reflect', 'wrap'
-    :param processing: '' defaults to 'hu'; other preprocessing tbd
-    :param mirroring_axes: None or one or more of ['lr', 'ud', 'fb']
-    :return: np.array of [[slices, x, y], label]
-    """
     # Validate input, passed directly to skimage.transform.resize()
     if mode is None:
         mode = 'constant'
