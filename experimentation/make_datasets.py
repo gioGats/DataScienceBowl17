@@ -15,11 +15,11 @@ def all_combinations(vary_dim2d=True, vary_slices=True,
     if vary_dim2d:
         combinations = [[100, 200, 300, 400]]
     else:
-        combinations = [[100]]
+        combinations = [[50, 100]]
     if vary_slices:
         combinations.append([20, 50, 100])
     else:
-        combinations.append([20])
+        combinations.append([-1])
     if vary_mode:
         combinations.append(['constant', 'edge', 'symmetric', 'reflect', 'wrap'])
     else:
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
         Parallel(n_jobs=-1, verbose=3)(delayed(make_dataset_wrapper)(i) for i in params_iter)
     elif '-all' in sys.argv:
-        params_iter = all_combinations(vary_dim2d=True, vary_slices=True,
+        params_iter = all_combinations(vary_dim2d=False, vary_slices=False,
                                        vary_mode=True, vary_processing=True,
                                        vary_mirroring=True, vary_blurring=True)
 
