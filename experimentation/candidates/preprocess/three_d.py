@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+from scipy.ndimage.filters import maximum_filter
 import dicom
 from skimage.transform import resize
 import os
@@ -104,8 +105,11 @@ def mirror_array(initial_array):
 
 
 def blur_array(initial_arrays):
-    # TODO Blurring
-    return initial_arrays
+    return_arrays = initial_arrays
+    for arr in return_arrays:
+        array_to_add = maximum_filter
+        return_arrays = np.vstack((return_arrays, array_to_add))
+    return return_arrays
 
 
 def resize_image(patient_array, shape, mode):
