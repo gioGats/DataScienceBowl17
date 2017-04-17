@@ -7,6 +7,7 @@ from joblib import Parallel, delayed
 
 #  Note: GDrive upload size limit is 5.2TB
 DATA_PATH = '/storage/data'
+DEBUG = False
 
 
 def all_combinations(vary_dim2d=True, vary_slices=True,
@@ -68,7 +69,7 @@ def make_dataset_wrapper(full_tuple, num_subsets=10, flush_freq=100):
                  exs_per_patient=exs_per_patient(full_tuple),
                  num_subsets=num_subsets,
                  flush_freq=flush_freq,
-                 debug=True)
+                 debug=DEBUG)
 
 
 if __name__ == '__main__':
