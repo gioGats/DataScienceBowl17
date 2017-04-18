@@ -1,4 +1,4 @@
-#!/usr/bin/env Python3
+#!/usr/bin/python3
 
 from candidates.preprocess.make_3D_dataset import make_dataset
 from candidates.preprocess.make_2D_dataset import make_2d_dataset
@@ -8,7 +8,6 @@ from joblib import Parallel, delayed
 
 #  Note: GDrive upload size limit is 5.2TB
 DATA_PATH = '/storage/data'
-DEBUG = True
 
 
 def all_combinations(vary_dim2d=True, vary_slices=True,
@@ -134,10 +133,12 @@ if __name__ == '__main__':
 
     elif '-2d' in sys.argv:
         if '-debug' in sys.argv:
+            DEBUG = True
             params_iter = all_2d_combinations(vary_dim2d=False, vary_mode=False)
             Parallel(n_jobs=-1, verbose=3)(delayed(make_2d_dataset_wrapper)(i) for i in params_iter)
 
         elif '-all' in sys.argv:
+            DEBUG = False
             params_iter = all_2d_combinations()
             Parallel(n_jobs=-1, verbose=3)(delayed(make_2d_dataset_wrapper)(i) for i in params_iter)
 
