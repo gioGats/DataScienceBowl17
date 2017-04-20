@@ -5,6 +5,14 @@ import os
 import h5py
 
 
+class RealInception(object):
+    def __init__(self, output_d):
+        raise NotImplementedError
+
+    def predict(self, x):
+        raise NotImplementedError
+
+
 class TestInception(object):
     def __init__(self, output_d):
         assert(isinstance(output_d, int))
@@ -15,11 +23,9 @@ class TestInception(object):
 
 
 def process_hdf5(clf, hdf5_name, data_dir, inception_return_length):
-    assert(isinstance(clf, tflearn.DNN))
-    processed_directory = data_dir + '/all_images/'
-    inception_directory = data_dir + '/inception_data/'
-    src = h5py.File(processed_directory + hdf5_name)
-    tgt = h5py.File(inception_directory + hdf5_name)
+    #assert(isinstance(clf, tflearn.DNN))
+    src = h5py.File(data_dir + '/processed_datasets/' + hdf5_name)
+    tgt = h5py.File(data_dir + '/inception_data/' + hdf5_name, 'w')
 
     # Copy Y
     tgt.create_dataset('Y', data=src['Y'][:])
@@ -31,22 +37,25 @@ def process_hdf5(clf, hdf5_name, data_dir, inception_return_length):
     for patient_id in src_x_grp:
         tgt_dset = tgt_x_grp.create_dataset(
             patient_id,
-            shape=(len(src_x_grp), inception_return_length),
+            shape=(len(src_x_grp[patient_id]), inception_return_length, 1),
             dtype=np.float32)
         for slice_name in src_x_grp[patient_id]:
-            slice_index = int(slice_name)  # TODO It might be slice_name - 1
-            tgt_dset[slice_index] = clf.predict(rc_x_grp[patient_id][slice_name][:])
+            slice_index = int(slice_name)
+            slice_dset = src_x_grp[patient_id][slice_name]
+            val = clf.predict(slice_dset[:])
+            tgt_dset[slice_index] = val
 
 
 if __name__ == '__main__':
     data_directory = '/storage/data'
-    test_clf = TestInception(1000)
     if '-debug' in sys.argv:
-        for file_name in os.listdir(data_directory + '/all_images'):
-            if 'DEBUG' in file_name:
+        test_clf = TestInception(1000)
+        for file_name in os.listdir(data_directory + '/processed_datasets'):
+            if 'DEBUG' in file_name and '2D' in file_name:
                 process_hdf5(test_clf, file_name, data_directory, test_clf.output_dimension)
 
-    elif '-all' in sys.argv:
-        for file_name in os.listdir(data_directory + '/all_images'):
-            if 'DEBUG' not in file_name:
+    elif '-all' in sys.argv and '2D' in sys.argv:
+        test_clf = RealInception()
+        for file_name in os.listdir(data_directory + '/processed_datasets'):
+            if 'DEBUG' not in file_name and '2D' in file_name:
                 process_hdf5(test_clf, file_name, data_directory, test_clf.output_dimension)
