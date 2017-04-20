@@ -19,7 +19,7 @@ class TestInception(object):
         self.output_dimension = output_d
 
     def predict(self, x):
-        return np.ones((self.output_dimension, 1), dtype=np.float32)
+        return np.random.random((self.output_dimension, 1)).astype(np.float32)
 
 
 def process_hdf5(clf, hdf5_name, data_dir, inception_return_length):
@@ -49,13 +49,13 @@ def process_hdf5(clf, hdf5_name, data_dir, inception_return_length):
 if __name__ == '__main__':
     data_directory = '/storage/data'
     if '-debug' in sys.argv:
-        test_clf = TestInception(1000)
+        test_clf = TestInception(2047)
         for file_name in os.listdir(data_directory + '/processed_datasets'):
             if 'DEBUG' in file_name and '2D' in file_name:
                 process_hdf5(test_clf, file_name, data_directory, test_clf.output_dimension)
 
     elif '-all' in sys.argv and '2D' in sys.argv:
-        test_clf = RealInception()
+        test_clf = RealInception(2047)
         for file_name in os.listdir(data_directory + '/processed_datasets'):
             if 'DEBUG' not in file_name and '2D' in file_name:
                 process_hdf5(test_clf, file_name, data_directory, test_clf.output_dimension)
